@@ -1,4 +1,4 @@
-from LDLink.scripts.ldlink import *
+from helpers.ldlink import *
 
 
 def test_ldproxy() -> None:
@@ -13,4 +13,5 @@ def test_ldtrait():
     """
     Test if LDtrait works.
     """
-    assert False
+    df = ldproxy('rs333')
+    assert not df.empty
