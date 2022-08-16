@@ -1,4 +1,4 @@
 # ImmuneGWAS
-scripts for analysis of GWAS results 
+Scripts for analysis of GWAS results.
 
-Ghadgsd
+These scripts integrate several eQTL databases to look for genetic effects of SNPs identified by GWAS. 
