@@ -19,7 +19,7 @@ def get_paths(root):
     res_dict['dbsnp'] = root+ "cbio3/data/dbSNP/"
     res_dict['eqtl_tokyo'] = root+ "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/eQTL_summarystats/"
     res_dict['ge_tokyo'] = root+ "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/"
-    res_dict['eqtlgen_cis'] = root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded.txt"
+    res_dict['eqtlgen_cis'] = root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded_sorted.txt"
     res_dict['eqtlgen_trans'] = root + "cbio3/projects/Zain_2021/eQTLgen/data/2018-09-04-trans-eQTLsFDR0.05-CohortInfoRemoved-BonferroniAdded.txt"
     res_dict['tokyo_alleles'] = root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/metadata/full_allele_defs.txt"
     return res_dict
