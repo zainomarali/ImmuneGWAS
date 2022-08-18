@@ -26,3 +26,7 @@ def get_paths(root):
                 'tokyo_alleles': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/metadata/full_allele_defs.txt"}
 
     return res_dict
+
+
+def get_sumstats_path(root):
+    return root + "cbio3/projects/antton/Immune_cell_GWAS/output/GWAS/combined_output/combined_hits_only.txt"
