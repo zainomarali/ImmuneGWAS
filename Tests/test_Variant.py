@@ -2,14 +2,9 @@ import pytest
 from Variant import Variant
 
 
-@pytest.fixture
-def variant_object():
-    return Variant("rs1234", 1, 25231562, "T", "G")
-
-
 def test_variant():
-    var = Variant("rs1234", 1, 25231562, "T", "G")
-    assert var.get_rsid() == "rs1234"
+    var = Variant("rs1308164722", 1, 25231562, "T", "G")
+    assert var.get_rsid() == "rs1308164722"
     assert var.get_chrom() == 1
     assert var.get_pos() == 25231562
     assert var.get_EA() == "T"
@@ -17,18 +12,30 @@ def test_variant():
 
 
 def test_from_rsid():
+    """
+    Test the alternate 'from_rsid' constructor.
+    """
     input_rsid = "rs9438875"
     var = Variant.from_rsid(input_rsid)
 
     assert var.get_rsid() == input_rsid
     assert var.get_chrom() == 1
-    assert var.get_pos() == 25231562
+    assert var.get_pos() == 24905071
     assert var.get_EA() == "T"
     assert var.get_OA() == "G"
 
 
+def test_cross_reference_dbsnp():
+    assert False
+
+
+@pytest.fixture
+def variant_object():
+    return Variant("rs1308164722", 1, 25231562, "T", "G")
+
+
 def test_get_rsid(variant_object):
-    assert variant_object.get_rsid() == "rs1234"
+    assert variant_object.get_rsid() == "rs1308164722"
 
 
 def test_get_fullpos(variant_object):

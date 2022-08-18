@@ -29,4 +29,4 @@ def get_paths(root):
 
 
 def get_sumstats_path(root):
-    return root + "cbio3/projects/antton/Immune_cell_GWAS/output/GWAS/combined_output/combined_hits_only.txt"
+    return root + "cbio3/projects/antton/Immune_cell_GWAS/output/GWAS/combined_output/combined_hits_only_hg38.txt"

@@ -1,5 +1,5 @@
 import subprocess
-from helpers import getpaths  # Import all the helper functions
+from helpers import getpaths, dbsnp  # Import all the helper functions
 import config
 
 
@@ -18,6 +18,7 @@ class Variant:
         self.pos = pos
         self.EA = EA
         self.OA = OA
+        self.__cross_reference_dbsnp()  # Sanity check the variant against the dbSNP database.
 
     @classmethod
     def from_rsid(cls, rsid: str):
@@ -37,6 +38,15 @@ class Variant:
         EA = sp_output_list[5]
 
         return cls(rsid, chrom, pos, EA, OA)
+
+    def __cross_reference_dbsnp(self) -> None:
+        """
+        Cross-reference the variant with the dbSNP database to ensure the rsID-position assignment is correct.
+        TODO : check alleles against the dbSNP database too.
+        """
+        dbsnp_rsid = dbsnp.dbsnp_single_position_query(self.chrom, self.pos)[2]  # dbSNP rsID for the position
+        if dbsnp_rsid != self.rsid:
+            raise ValueError(f"rsID {self.rsid} does not match dbSNP rsID {dbsnp_rsid}")
 
     def get_rsid(self):
         return self.rsid
