@@ -5,6 +5,14 @@ import config
 
 class Variant:
     def __init__(self, rsid: str, chrom: int, pos: int, EA: str, OA: str):
+        """
+        Initialise a new Variant object.
+        :param rsid: The rsID of the variant.
+        :param chrom: The chromosome number of the variant.
+        :param pos: The position of the variant.
+        :param EA: The Effect Allele.
+        :param OA: The Other Allele.
+        """
         self.rsid = rsid
         self.chrom = chrom
         self.pos = pos
@@ -42,8 +50,8 @@ class Variant:
     def get_chrom(self):
         return self.chrom
 
-    def get_ea(self):
+    def get_EA(self):
         return self.EA
 
-    def get_oa(self):
+    def get_OA(self):
         return self.OA

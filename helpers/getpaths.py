@@ -18,7 +18,7 @@ Keys:
 
 def get_paths(root):
     res_dict = {'eqtl_cat': root + "cbio3/data/eQTL_DB/",
-                'dbsnp': root + "cbio3/data/dbSNP/",
+                'dbsnp': root + "cbio3/data/dbSNP/GCF_000001405.39.gz",
                 'eqtl_tokyo': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/eQTL_summarystats/",
                 'ge_tokyo': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/",
                 'eqtlgen_cis': root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded_sorted.txt ",
