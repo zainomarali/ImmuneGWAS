@@ -13,6 +13,10 @@ Keys:
     ge_tokyo: gene expression from ImmunexUT
     eqtlgen_cis: cis-eQTLs from eQTLgen
     eqtlgen_trans: trans-eQTLs from eQTLgen
+    tokyo_ge: TPMs from ImmunexUT
+    
+    
+Will add more gene expression resources for blood - eg. Sankaran, Dick lab, others
 """
 
 
@@ -23,6 +27,9 @@ def get_paths(root):
                 'ge_tokyo': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/",
                 'eqtlgen_cis': root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded_sorted.txt ",
                 'eqtlgen_trans': root + "cbio3/projects/Zain_2021/eQTLgen/data/2018-09-04-trans-eQTLsFDR0.05-CohortInfoRemoved-BonferroniAdded.txt ",
-                'tokyo_alleles': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/metadata/full_allele_defs.txt"}
+                'tokyo_alleles': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/metadata/full_allele_defs.txt",
+               'tokyo_ge': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/",
+               'ensembl': root +"cbio3/data/ensembl_biomart/gene_aliases.txt",
+               "ucsc": root + "cbio3/data/ensembl_biomart/hg38_genes_ucsc.txt"}
 
     return res_dict
