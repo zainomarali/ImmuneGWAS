@@ -43,7 +43,7 @@ class Variant:
         return self.chrom
 
     def get_ea(self):
-        return self.ea
+        return self.EA
 
     def get_oa(self):
-        return self.oa
+        return self.OA

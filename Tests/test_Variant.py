@@ -1,15 +1,21 @@
-import Variant
+from Variant import Variant
 
 
 # TODO: When the code gets moved out of 'prototyping', this test should load the correct class.
+
+
+def test_variant():
+    var = Variant("rs1234", 1, 25231562, "T", "G")
+    assert var.get_rsid() == "rs1234"
+
 
 def test_from_rsid():
     input_rsid = "rs9438875"
     var = Variant.from_rsid(input_rsid)
 
     assert var.get_rsid() == input_rsid
-    assert var.get_chrom() == "1"
-    assert var.get_pos() == "25231562"
+    assert var.get_chrom() == 1
+    assert var.get_pos() == 25231562
     assert var.get_ea() == "T"
     assert var.get_oa() == "G"
 
