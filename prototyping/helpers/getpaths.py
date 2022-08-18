@@ -33,3 +33,7 @@ def get_paths(root):
                "ucsc": root + "cbio3/data/ensembl_biomart/hg38_genes_ucsc.txt"}
 
     return res_dict
+
+
+def get_sumstats_path(root):
+    return root + "cbio3/projects/antton/Immune_cell_GWAS/output/GWAS/combined_output/combined_hits_only.txt"
