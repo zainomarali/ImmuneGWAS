@@ -12,12 +12,13 @@ For more information, check README file in cbio3/data/dbSNP/
 # TODO: add pytabix to requirements.txt
 dbsnp_path = get_paths(config.cbio_root)['dbsnp']  # Path to dbSNP file
 
-path_to_chr_RefSeq = '/'.join(dbsnp_path.split('/')[:-1] + ['chr_to_RefSeq.txt'])  # Path to file with chr to RefSeq mappings
+path_to_chr_RefSeq = '/'.join(
+    dbsnp_path.split('/')[:-1] + ['chr_to_RefSeq.txt'])  # Path to file with chr to RefSeq mappings
 with open(path_to_chr_RefSeq, 'r') as f:  # Load the file with the mappings into a dictionary
     chr_to_RefSeq_dict = {int(line.split('\t')[0]): line.split('\t')[1].rstrip() for line in f}
 
 
-def dbsnp_single_position_query(SNP_chr : int, SNP_pos : int):
+def dbsnp_single_position_query(SNP_chr: int, SNP_pos: int):
     """
     Query the dbSNP file for a single position.
     It converts the chromosome number to the RefSeq chromosome name before querying.

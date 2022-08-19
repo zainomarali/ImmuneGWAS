@@ -82,5 +82,8 @@ def test_set_ldblock():
 
 
 def test_set_ldblock_not_found():
+    """
+    If the rsID is not included in LDlink, an exception should be raised.
+    """
     with pytest.raises(ValueError):
         Variant.from_rsid("rs1308164722")

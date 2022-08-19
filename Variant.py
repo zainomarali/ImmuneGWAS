@@ -18,7 +18,7 @@ class Variant:
         self.pos = pos
         self.EA = EA
         self.OA = OA
-        self.LDblock = None  # Initialize an empty LDblock attribute. LDblock is a pandas dataframe
+        self.LDblock = None  # Initialize an empty LDblock attribute. LDblock will be a pandas dataframe later.
 
         self.__cross_reference_dbsnp()  # Sanity check the variant against the dbSNP database.
         self.set_LDblock()  # Set the LDblock attribute for the Variant.
