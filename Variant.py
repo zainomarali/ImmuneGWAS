@@ -27,10 +27,12 @@ class Variant:
         NOTE: the current approach is to use grep, but it might be too unreliable. Maybe it's better to use pandas?
         """
         path = getpaths.get_sumstats_path(config.cbio_root)
-        process = subprocess.Popen(["grep", rsid, path], stdout=subprocess.PIPE)  # grep the rsid from the file
+        process = subprocess.Popen(["grep", "-w", rsid, path], stdout=subprocess.PIPE)  # grep the rsid from the file
         sp_output, sp_error = process.communicate()  # Get the output of the process, both stdout and stderr
         if sp_error:  # I don't know if this would even be reached. Probably other errors would be raised first.
             raise ValueError(f"Error when trying to grep the rsid from the sumstats file:\n{sp_error}")
+        if not sp_output:  # If the output is empty, the rsid is not in the file.
+            raise ValueError(f"rsID {rsid} not found in sumstats file.")
         sp_output_list = sp_output.decode("utf-8").split('\t')  # decode bytes to string and split by tab
         chrom = int(sp_output_list[2])
         pos = int(sp_output_list[3])

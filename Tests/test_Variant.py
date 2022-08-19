@@ -25,8 +25,13 @@ def test_from_rsid():
     assert var.get_OA() == "G"
 
 
-def test_cross_reference_dbsnp():
-    assert False
+def test_from_rsid_not_in_sumstats():
+    """
+    Test the alternate 'from_rsid' constructor when the given rsID is not in the sumstats file.
+    Should raise a ValueError.
+    """
+    with pytest.raises(ValueError):
+        Variant.from_rsid("rs943")
 
 
 @pytest.fixture
