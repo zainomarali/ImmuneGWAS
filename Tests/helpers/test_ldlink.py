@@ -43,6 +43,5 @@ def test_ldtrait(ldtrait_df) -> None:
 def test_ldtrait_columns(ldtrait_df) -> None:
     """
     Test that the dataframe has the necessary columns.
-    TODO: Complete this test
     """
-    assert False
+    assert "R2" in ldtrait_df.columns
