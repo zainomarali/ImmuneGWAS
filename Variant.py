@@ -32,7 +32,7 @@ class Variant:
         if sp_error:  # I don't know if this would even be reached. Probably other errors would be raised first.
             raise ValueError(f"Error when trying to grep the rsid from the sumstats file:\n{sp_error}")
         if not sp_output:  # If the output is empty, the rsid is not in the file.
-            raise ValueError(f"rsID {rsid} not found in sumstats file.")
+            raise ValueError(f"rsID {rsid} not found in the sumstats file.")
         sp_output_list = sp_output.decode("utf-8").split('\t')  # decode bytes to string and split by tab
         chrom = int(sp_output_list[2])
         pos = int(sp_output_list[3])
@@ -46,9 +46,14 @@ class Variant:
         Cross-reference the variant with the dbSNP database to ensure the rsID-position assignment is correct.
         TODO : check alleles against the dbSNP database too.
         """
-        dbsnp_rsid = dbsnp.dbsnp_single_position_query(self.chrom, self.pos)[2]  # dbSNP rsID for the position
+        dbsnp_row_list = dbsnp.dbsnp_single_position_query(self.chrom, self.pos)  # Full dbSNP row for the position
+        if len(dbsnp_row_list) > 1:
+            print(f"Multiple dbSNP rows found for {self.chrom}:{self.pos}. Using the first one for crossreference.")
+        dbsnp_row = dbsnp_row_list[0]
+        # The columns in the dbSNP file are: CHROM POS ID REF ALT QUAL FILTER INFO
+        dbsnp_rsid = dbsnp_row[2]  # dbSNP rsID for the position
         if dbsnp_rsid != self.rsid:
-            raise ValueError(f"rsID {self.rsid} does not match dbSNP rsID {dbsnp_rsid}")
+            raise ValueError(f"rsID {self.rsid} does not match dbSNP rsID {dbsnp_rsid} for that position {self.chrom, self.pos}")
 
     def get_rsid(self):
         return self.rsid

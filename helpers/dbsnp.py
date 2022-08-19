@@ -17,7 +17,7 @@ with open(path_to_chr_RefSeq, 'r') as f:  # Load the file with the mappings into
     chr_to_RefSeq_dict = {int(line.split('\t')[0]): line.split('\t')[1].rstrip() for line in f}
 
 
-def dbsnp_single_position_query(SNP_chr : int, SNP_pos : int):
+def dbsnp_single_position_query(SNP_chr : int, SNP_pos : int) -> list:
     """
     Query the dbSNP file for a single position.
     It converts the chromosome number to the RefSeq chromosome name before querying.
@@ -30,9 +30,10 @@ def dbsnp_single_position_query(SNP_chr : int, SNP_pos : int):
     query_str = f"{chr_to_RefSeq_dict[SNP_chr]}:{SNP_pos}-{SNP_pos}"  # For example: NC_000006.12:17100-17100
     print("query_str ", query_str)
     matches = tb.querys(query_str)
-    match_list = [x for x in matches]
+    # The columns in the dbSNP file are: CHROM POS ID REF ALT QUAL FILTER INFO
+    match_list = [x for x in matches]  # Convert the generator to a list
     if not match_list:
         print(f"WARNING: No matches for {SNP_chr}:{SNP_pos}-{SNP_pos}")
         return None
     else:
-        return match_list[0]  # Return the first match (there should only be one)
+        return match_list  # This will be a list with a variable number of elements.
