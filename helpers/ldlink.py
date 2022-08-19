@@ -5,16 +5,12 @@ from requests.structures import CaseInsensitiveDict
 
 
 """
-Functions to access LDProxy and LDTrait API from LDLink
+Functions to access LDProxy and LDTrait API from LDLink, using Zain's access token: da0eb217dded
 
-Using Zain's access token: da0eb217dded
-
-two functions: ldproxy, ldtrait
-
-takes rsid as input, returns pandas dataframes that correspond to API access
-
-Defaults to EUR populations. To search for Japanese populations for ImmunexUT
-set "pop='JPT'" when calling function.
+There are two functions: 'ldproxy' and 'ldtrait'
+In both cases, the function takes an rsid as input, and returns pandas dataframes that correspond to API access.
+By default, they use EUR populations.
+To search for Japanese populations for ImmunexUT set "pop='JPT'" when calling function.
 
 Downstream processing needed: 
 
@@ -40,20 +36,21 @@ def ldtrait(rsid, pop='"CEU+FIN+GBR+TSI+IBS"'):
     d1 = '{"snps": '
     d2 = ', "pop": ' + pop + ', "r2_d": "r2", "r2_d_threshold": "0.8", "window": "500000", "genome_build": ' \
                              '"grch38_high_coverage"} '
-
-    cols = ['Query', 'GWAS Trait', 'RS Number', 'Position (GRCh38)', 'Alleles',
-            'R2', 'D', 'Risk Allele', 'Effect Size (95% CI)', 'Beta or OR',
-            'P-value']
-
     rsid = '"' + rsid + '"'
     d = d1 + rsid + d2
     response = requests.post(url, data=d, headers=headers)
+
+    if not response.ok:
+        raise RuntimeError(f"LDLink HTTP POST response status code: {response.status_code}. Make sure arguments are "
+                           "correct.")
     inputlist = []
     for row in response:
         inputlist.append(row)
     inputlist = [row.decode('UTF-8') for row in inputlist]
-    inputlist = ("").join(inputlist).split('\n')
+    inputlist = "".join(inputlist).split('\n')
     inputlist = [i for i in inputlist if i != '']
+    cols = ['Query', 'GWAS Trait', 'RS Number', 'Position (GRCh38)', 'Alleles', 'R2', 'D', 'Risk Allele',
+            'Effect Size (95% CI)', 'Beta or OR', 'P-value']
     df = pd.DataFrame(columns=cols)
     for i in range(1, len(inputlist)):
         row = inputlist[i].split('\t')
@@ -62,13 +59,13 @@ def ldtrait(rsid, pop='"CEU+FIN+GBR+TSI+IBS"'):
     return df
 
 
-def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshhold=0.8):
+def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
     """
     Access LDproxy and get all the SNPs in LD (R2 > 0.8) with the input SPN.
 
     :param rsid: rsid you are interested in
     :param pop: Populations to use in the LDProxy query. Default is European.
-    :param threshhold: R2 threshold. 0.8 by default
+    :param threshold: R2 threshold. 0.8 by default
     """
 
     token = 'da0eb217dded'  # this is the token I got for API access can be different for other users
@@ -81,15 +78,15 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshhold=0.8):
         ('genome_build', 'grch38_high_coverage')
     )
     response = requests.get('https://ldlink.nci.nih.gov/LDlinkRest/ldproxy', params=params, verify=False)
-
+    if not response.ok:
+        raise RuntimeError(f"LDLink HTTP POST response status code: {response.status_code}. Make sure arguments are "
+                           "correct.")
     # the requests library produces a response object that must be first converted into a single string
     # and then split by tabs and newlines
 
     inputlist = []
-
-    for row in response:
+    for row in response:  # Fill up inputlist with the response from the API
         inputlist.append(row)
-
     inputlist = [row.decode('UTF-8') for row in inputlist]
     x = inputlist[0]
     for i in range(1, len(inputlist)):
@@ -103,7 +100,7 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshhold=0.8):
     df = df.drop(df.index[-1])
     if "R2" in df.columns:
         df.R2 = df.R2.astype(float)
-        df = df[df.R2 > threshhold]
+        df = df[df.R2 > threshold]
     else:
         print("ERROR: df lacks 'R2' column. It might be empty.")
     return df

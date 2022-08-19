@@ -28,11 +28,11 @@ def dbsnp_single_position_query(SNP_chr : int, SNP_pos : int):
     """
     tb = tabix.open(dbsnp_path)
     query_str = f"{chr_to_RefSeq_dict[SNP_chr]}:{SNP_pos}-{SNP_pos}"  # For example: NC_000006.12:17100-17100
-    print("query_str ", query_str)
     matches = tb.querys(query_str)
-    match_list = [x for x in matches]
+    # The columns in the dbSNP file are: CHROM POS ID REF ALT QUAL FILTER INFO
+    match_list = [x for x in matches]  # Convert the generator to a list
     if not match_list:
         print(f"WARNING: No matches for {SNP_chr}:{SNP_pos}-{SNP_pos}")
         return None
     else:
-        return match_list[0]  # Return the first match (there should only be one)
+        return match_list  # This will be a list with a variable number of elements.
