@@ -20,6 +20,7 @@ def get_eqtl_cat_file_list() -> list:
 def get_studies_of_type(study_type_key: str) -> list:
     """
     Returns a list of all the studies in eQTL catalogue that are of the specified type.
+
     :param study_type_key: key for the study type. Options are 'ge', 'exon', 'tx', 'txrev' and 'microarray'
     :return: list of all the studies of the requested type in the eQTL catalogue data
     """
@@ -30,7 +31,10 @@ def get_studies_of_type(study_type_key: str) -> list:
     studies_of_type = []
     for study in all_studies:
         if "_" + study_type_key + "_" in study and study.endswith("txt.gz"):
-            studies_of_type.append(study)
+            if os.path.exists(eqtl_cat_path + "/" + study + ".tbi"):
+                studies_of_type.append(study)
+            else:
+                print(f"WARNING: no tabix index file could be found for {study} .")
     return studies_of_type
 
 

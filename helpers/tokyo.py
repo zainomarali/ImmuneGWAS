@@ -13,6 +13,7 @@ def get_tokyo_eqtl_file_list() -> list:
     Returns a list of the files in the Tokyo eQTL folder that have the structure "sorted_<name>_txt.gz" and a
     corresponding tabix index. There should be 28(?) files.
     Each cell type has its own file.
+
     :return: list of files in the Tokyo eQTL folder that have the structure "sorted_<name>_txt.gz" and .tbi file
     """
     all_files_in_dir = os.listdir(tokyo_eqtl_path)
@@ -29,9 +30,9 @@ def get_tokyo_eqtl_file_list() -> list:
 
 def single_tokyo_eqtl_query(chromosome, position) -> pd.DataFrame:
     """
-    Single Tokyo eQTL query
-    Go through the eQTL files and return the eQTLs that are significant for the variant located at queried
-    chromosome:position.
+    Single Tokyo eQTL query.
+    Using Tabix, go through the Tokyo eQTL files (there is one per cell type) and get the entries corresponding to the
+    variant located at queried chromosome:position. Fill a dataframe with the matches and return it.
 
     :param chromosome: chromosome number
     :param position: position on the chromosome
@@ -57,7 +58,7 @@ def single_tokyo_eqtl_query(chromosome, position) -> pd.DataFrame:
                 list_of_celltype_match_dfs.append(match_df)
         except tabix.TabixError:
             # TODO: better message. Pretty sure this exception is thrown when the variant is not in the file,
-            #  so it's not really an error, just that the variant is not there
+            #  so it's not really an error, just that the variant is not there (?)
             print("No output for file ", tokyo_eqtl_file)
             continue
     if list_of_celltype_match_dfs:
@@ -69,6 +70,9 @@ def single_tokyo_eqtl_query(chromosome, position) -> pd.DataFrame:
 def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     """
     Query the Tokyo eQTL catalogue for each variant in the LD block of the Variant object.
+    It calls :py:func:`single_tokyo_eqtl_query` for each variant in the LD block, stores each output dataframe in a
+    list, and then concatenates the list into a single dataframe.
+
     :param variant_object: Variant object
     :return: DataFrame with all the matches from the eQTL catalogue for the LD block of the Variant object
     """
