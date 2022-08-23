@@ -5,8 +5,8 @@ import os
 import pandas as pd
 import tabix
 
-
-eqtl_cat_path = get_paths(config.cbio_root)['eqtl_cat']+"/curated_crediblesets"  # Path to eQTL catalogue directory. Contains several files.
+eqtl_cat_path = get_paths(config.cbio_root)[
+                    'eqtl_cat'] + "/curated_crediblesets"  # Path to eQTL catalogue directory. Contains several files.
 
 
 def get_eqtl_cat_file_list() -> list:
@@ -29,7 +29,7 @@ def get_studies_of_type(study_type_key: str) -> list:
     all_studies = get_eqtl_cat_file_list()
     studies_of_type = []
     for study in all_studies:
-        if "_"+study_type_key+"_" in study and study.endswith("txt.gz"):
+        if "_" + study_type_key + "_" in study and study.endswith("txt.gz"):
             studies_of_type.append(study)
     return studies_of_type
 
@@ -74,6 +74,8 @@ def single_eqtl_catalogue_query_type_restricted(chromosome, position, study_type
                 list_of_study_match_dfs.append(df)
 
         except tabix.TabixError:
+            # TODO: better message. Pretty sure this exception is thrown when the variant is not in the file,
+            #  so it's not really an error, just that the variant is not there
             print("Something went wrong when trying to access the file ", eqtl_cat_file, ". Skipping this study.")
             continue
     if list_of_study_match_dfs:
@@ -92,29 +94,43 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
     :param study_type_key: key for the study type. Options are 'ge', 'exon', 'tx', 'txrev' and 'microarray'
     :return: DataFrame with all the matches from the eQTL catalogue for every SNP in the LDblock
     """
-    lead_variant_df = single_eqtl_catalogue_query_type_restricted(variant_object.get_chrom(), variant_object.get_pos(), study_type_key)
+    lead_variant_df = single_eqtl_catalogue_query_type_restricted(variant_object.get_chrom(), variant_object.get_pos(),
+                                                                  study_type_key)
     eqtl_cat_matches_list = [lead_variant_df]  # List of dataframes, used to concat all the dfs together.
     LDblock_df = variant_object.get_LDblock()
     variant_positions_list_of_lists = []  # [[chromosome, position], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
-        variant_positions_list_of_lists = LDblock_df[['chrom', 'hg38_pos']].values.tolist()  # List of lists with [chr, position] for each variant
-    else:  # This check could be better. If the columns don't exist probably means dataframe is empty.
+        variant_positions_list_of_lists = LDblock_df[
+            ['chrom', 'hg38_pos']].values.tolist()  # List of lists with [chr, position] for each variant
+    else:  # TODO: This check could be better. If the columns doesn't exist probably means dataframe is empty.
         print("No keys 'chrom', 'hg38_pos' in LDblock_df.columns. Returning lead variant only.")
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:
             # DataFrame with all the matches from eQTL cat studies for the variant at the position (list[0], list[1])
-            variant_df = single_eqtl_catalogue_query_type_restricted(variant_pos_list[0], variant_pos_list[1], study_type_key)
+            variant_df = single_eqtl_catalogue_query_type_restricted(variant_pos_list[0], variant_pos_list[1],
+                                                                     study_type_key)
             eqtl_cat_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(eqtl_cat_matches_list)
 
     return concat_df
 
 
-def eqtl_catalogue_LDblock_query_type_restricted_all_types(variant_object: Variant) -> pd.DataFrame:
+def eqtl_catalogue_LDblock_query_type_restricted_multiple_types(variant_object: Variant,
+                                                                input_study_list: list = None) -> pd.DataFrame:
     """
     Go through the eQTL catalogue studies of all types and return the eQTLs that are significant for every variant.
+    :param variant_object: Variant object
+    :param input_study_list: list of study types to query. Should be a list containing a slice of the list
+    ['ge', 'exon', 'tx', 'txrev' and 'microarray']. If none is specified, all study types are queried.
     """
     df_list = []
-    for study_type_key in ['ge', 'exon', 'tx', 'txrev', 'microarray']:
+    if input_study_list is None:
+        study_list = ['ge', 'exon', 'tx', 'txrev', 'microarray']
+    else:
+        study_list = list(set(input_study_list))  # Remove duplicates just in case
+    for study_type_key in study_list:
+        if study_type_key not in ['ge', 'exon', 'tx', 'txrev', 'microarray']:
+            raise ValueError("Invalid study type specified. study_type_key must be one of 'ge', 'exon', 'tx', "
+                             "'txrev' or 'microarray'")
         df_list.append(eqtl_catalogue_LDblock_query_type_restricted(variant_object, study_type_key))
     return pd.concat(df_list)
