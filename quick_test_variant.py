@@ -13,7 +13,7 @@ This script exists in place of a main function for now to test new functionality
 #var = Variant.from_rsid("rs476373")
 #var = Variant.from_rsid("rs482811")
 #var = Variant.from_rsid("rs9272363")
-var = Variant("rs149143617", 1, 777870, "A", "G")
+var = Variant("rs149143617", 1, 777870, "C", "G")
 
 print("Position is: ", var.get_fullpos())
 
