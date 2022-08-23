@@ -51,3 +51,6 @@ def eqtlgen_cis_LDblock_query(variant_object: Variant):
     concat_df = pd.concat(eqtlgen_cis_matches_list)
 
     return concat_df
+
+# TODO: write lookup functions for eQTLgen Trans-eQTLs as well!
+
