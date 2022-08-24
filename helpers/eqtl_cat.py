@@ -138,3 +138,46 @@ def eqtl_catalogue_LDblock_query_type_restricted_multiple_types(variant_object: 
                              "'txrev' or 'microarray'")
         df_list.append(eqtl_catalogue_LDblock_query_type_restricted(variant_object, study_type_key))
     return pd.concat(df_list)
+
+
+def eqtl_catalogue_to_summary_table(eqtl_cat_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert the dataframe with all the matches from the eQTL catalogue for the LD block of the Variant object to a
+    summary table.
+    The summary table has the following columns:
+
+    - gene_id: gene id
+    - cell_type: cell type
+    - p_value: p value NOTE: we call this p-value but we are using the 'pip'  # TODO: decide what to do with this
+    - beta : effect size. Harmonized so that the sign corresponds to the EA
+    - resource : database/resource where the data is coming from
+
+    :param eqtl_cat_df: DataFrame outputted by the eQTL catalogue lookup functions
+    :return: Summary table with the above columns.
+    """
+    if eqtl_cat_df.empty:
+        print("WARNING: No matches found in eQTL catalogue. Returning empty dataframe.")
+        return pd.DataFrame()
+    elif not {"molecular_trait_id", "cell_type", "pip", "z"}.issubset(eqtl_cat_df.columns):
+        raise ValueError("Dataframe does not have the required columns. Required columns are: "
+                         "molecular_trait_id, cell_type, pip, z")
+
+    df = eqtl_cat_df[["molecular_trait_id", "cell_type", "pip", "z"]].copy()
+    df.columns = ["gene_id", "cell_type", "p_value", "beta"]
+    df["resource"] = "eqtl_cat"
+
+    # TODO: Harmonize the sign of the beta so that the sign corresponds to the EA
+
+    return df
+
+
+def eqtl_catalogue_LDblock_query_type_restricted_multiple_types_formatted_output(variant_object: Variant,
+                                                                                 input_study_list: list = None) -> pd.DataFrame:
+    """
+    Call :py:func:`tokyo_eqtl_LDblock_query` and :py:func:`tokyo_eqtl_to_summary_table` to get the summary table
+    directly, without the full table.
+    """
+    df = eqtl_catalogue_to_summary_table(eqtl_catalogue_LDblock_query_type_restricted_multiple_types(variant_object,
+                                                                                                     input_study_list))
+
+    return df

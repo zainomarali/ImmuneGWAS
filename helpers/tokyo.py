@@ -93,3 +93,44 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     concat_df = pd.concat(tokyo_eqtl_matches_list)
 
     return concat_df
+
+
+def tokyo_eqtl_to_summary_table(tokyo_eqtl_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert the dataframe with all the matches from the eQTL catalogue for the LD block of the Variant object to a
+    summary table.
+    The summary table has the following columns:
+
+    - gene_id: gene id
+    - cell_type: cell type
+    - p_value: p value
+    - beta : effect size. Harmonized so that the sign corresponds to the EA
+    - resource : database/resource where the data is coming from
+
+    :param tokyo_eqtl_df: DataFrame outputted by the Tokyo lookup functions
+    :return: Summary table with the above columns.
+    """
+    if tokyo_eqtl_df.empty:
+        print("WARNING: No matches found in Tokyo eQTL dataset. Returning empty dataframe.")
+        return pd.DataFrame()
+    elif not {"Gene_id", "cell_type", "Forward_nominal_P", "Forward_slope"}.issubset(tokyo_eqtl_df.columns):
+        raise ValueError("Input dataframe does not have the required columns. The required columns are: Gene_id, "
+                         "cell_type, Forward_nominal_P, Forward_slope")
+
+    df = tokyo_eqtl_df[["Gene_id", "cell_type", "Forward_nominal_P", "Forward_slope"]].copy()
+    df.columns = ["gene_id", "cell_type", "p_value", "beta"]
+    df["resource"] = "Tokyo"
+
+    # TODO: Harmonize the sign of the beta so that the sign corresponds to the EA
+
+    return df
+
+
+def tokyo_eqtl_LDblock_query_formatted_output(variant_object : Variant) -> pd.DataFrame:
+    """
+    Call :py:func:`tokyo_eqtl_LDblock_query` and :py:func:`tokyo_eqtl_to_summary_table` to get the summary table
+    directly, without the full table.
+    """
+    df = tokyo_eqtl_to_summary_table(tokyo_eqtl_LDblock_query(variant_object))
+
+    return df

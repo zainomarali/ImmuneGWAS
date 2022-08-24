@@ -81,7 +81,10 @@ def single_eqtlgen_trans_query(chromosome: int, position: int) -> pd.DataFrame:
 
 def eqtlgen_trans_LDblock_query(variant_object: Variant):
     """
-    Query the eQTLgen cis-eQTL file for the entire LD block stored in the variant object.
+    TRANS-eQTL lookup for entire LDblock.
+    Query the eQTLgen trans-eQTL file for the entire LD block stored in the variant object.
+
+    :param variant_object: Variant object
     """
     lead_variant_df = single_eqtlgen_trans_query(variant_object.get_chrom(), variant_object.get_pos())
     eqtlgen_trans_matches_list = [lead_variant_df]  # List of dataframes, used to concat all the dfs together.
@@ -98,5 +101,47 @@ def eqtlgen_trans_LDblock_query(variant_object: Variant):
             variant_df = single_eqtlgen_trans_query(variant_pos_list[0], variant_pos_list[1])
             eqtlgen_trans_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(eqtlgen_trans_matches_list)
-
     return concat_df
+
+
+def eqtlgen_cis_to_summary_table(eqtlgen_df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Convert the dataframe with all the matches from the eQTLGen lookup for the LD block of the Variant object to a
+    summary table.
+    The summary table should have the following columns:
+
+    - gene_id: gene id
+    - cell_type: cell type
+    - p_value: p value
+    - beta : effect size. Harmonized so that the sign corresponds to the EA
+      NOTE: we call this 'beta' but the data we are using are actually z-scores! TODO : decide if we want to change this
+    - resource : database/resource where the data is coming from
+
+
+    :param eqtlgen_df: DataFrame outputted by the eQTLGen lookup functions
+    :return: Summary table with the above columns.
+    """
+    if eqtlgen_df.empty:
+        print("WARNING: No matches found for eqtlgen_cis dataset. Returning empty dataframe.")
+        return pd.DataFrame()
+    elif not {"Gene", "Pvalue", "Zscore"}.issubset(eqtlgen_df.columns):
+        raise ValueError("Dataframe does not have required columns.")
+
+    df = eqtlgen_df[["Gene", "Pvalue", "Zscore"]].copy()
+    df.columns = ["gene_id", "p_value", "beta"]
+    df.insert(1, "cell_type", "whole_blood")  # Manually insert cell type, since all of eqtlgen is whole blood
+    df["resource"] = "eqtlgen_cis"
+
+    # TODO: Harmonize the sign of the beta so that the sign corresponds to the EA
+
+    return df
+
+
+def eqtlgen_cis_LDblock_query_formatted_output(variant_object: Variant) -> pd.DataFrame:
+    """
+    Call :py:func:`eqtlgen_cis_LDblock_query` and :py:func:`eqtlgen_cis_to_summary_table` to get the summary table
+    directly, without the full table.
+    """
+    df = eqtlgen_cis_to_summary_table(eqtlgen_cis_LDblock_query(variant_object))
+
+    return df
