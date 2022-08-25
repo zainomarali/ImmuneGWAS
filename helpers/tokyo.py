@@ -76,15 +76,21 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     :param variant_object: Variant object
     :return: DataFrame with all the matches from the eQTL catalogue for the LD block of the Variant object
     """
+    # Lookup for the user-inputted variant, a.k.a. the lead variant, on its own
     lead_variant_df = single_tokyo_eqtl_query(variant_object.get_chrom(), variant_object.get_pos())
-    tokyo_eqtl_matches_list = [lead_variant_df]  # List of dataframes, one for each variant in the LD block
+    tokyo_eqtl_matches_list = [lead_variant_df]  # List of dfs, one per variant in LD block, used for concatenation
+
     LDblock_df = variant_object.get_LDblock()
+    if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
+        print("WARNING: The Variant object has no LDblock attribute. Returning lead variant only.")
+        return lead_variant_df
+
     variant_positions_list_of_lists = []  # [[chromosome, position], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
         variant_positions_list_of_lists = LDblock_df[
             ['chrom', 'hg38_pos']].values.tolist()  # List of lists with [chr, position] for each variant
-    else:  # TODO: This check could be better. If the columns doesn't exist probably means dataframe is empty.
-        print("No keys 'chrom', 'hg38_pos' in LDblock_df.columns. Returning lead variant only.")
+    else:  # TODO: This check could be more thorough.
+        raise ValueError("LDblock dataframe has no 'chrom' or 'hg38_pos' columns.")
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:
             # DataFrame with all the matches for the variant at the position (list[0], list[1])

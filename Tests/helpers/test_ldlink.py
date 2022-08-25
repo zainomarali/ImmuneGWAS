@@ -45,3 +45,6 @@ def test_ldtrait_columns(ldtrait_df) -> None:
     Test that the dataframe has the necessary columns.
     """
     assert "R2" in ldtrait_df.columns
+
+
+# TODO: Add tests for when the variant has not LDblock or output is faulty.

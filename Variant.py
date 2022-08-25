@@ -1,4 +1,5 @@
 import subprocess
+import pandas as pd
 from helpers import getpaths, dbsnp, ldlink  # Import all the helper functions
 import config
 
@@ -105,17 +106,25 @@ class Variant:
     def get_LDblock(self):
         return self.LDblock
 
-    def set_LDblock(self) -> None:
+    def set_LDblock(self, calculate: bool = True, new_df: pd.DataFrame = None) -> None:
         """
-        Set the LDblock attribute for the Variant.
-        """
-        df = ldlink.ldproxy(self.rsid)
-        if 'Correlated_Alleles' not in df.columns:
-            raise ValueError(f"No LDblock found for {self.rsid}. Please choose a different rsID.")
+        Set the LDblock attribute for the Variant. If calculate is True, the LDblock is calculated by using LDproxy with
+        the rsid attribute of the Variant object used for the query. If calculate is False, the LDblock is set to the
+        one given as the new_df argument.
 
-        df['EA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.EA])
-        df['OA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.OA])
-        df['chrom'] = df.Coord.apply(lambda x: int(x.split(":")[0][-1]))
-        df['hg38_pos'] = df.Coord.apply(lambda x: int(x.split(":")[1]))
-        df = df[['RS_Number', 'chrom', 'hg38_pos', 'EA', 'OA', 'R2', 'MAF']]
-        self.LDblock = df
+        :param calculate: If true, calculate the LDblock from the rsid of the Variant object.
+        :param new_df: DataFrame to set as the new LDblock attribute. Only used if calculate is False.
+        """
+        if calculate:
+            df = ldlink.ldproxy(self.rsid)
+            if 'Correlated_Alleles' not in df.columns:
+                raise ValueError(f"No LDblock found for {self.rsid}. Please choose a different rsID.")
+
+            df['EA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.EA])
+            df['OA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.OA])
+            df['chrom'] = df.Coord.apply(lambda x: int(x.split(":")[0][-1]))
+            df['hg38_pos'] = df.Coord.apply(lambda x: int(x.split(":")[1]))
+            df = df[['RS_Number', 'chrom', 'hg38_pos', 'EA', 'OA', 'R2', 'MAF']]
+            self.LDblock = df
+        else:
+            self.LDblock = new_df
