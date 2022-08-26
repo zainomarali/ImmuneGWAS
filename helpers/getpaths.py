@@ -6,21 +6,27 @@ is provided.
 """
 
 
-def get_paths(root):
+def get_paths(root: str) -> dict:
     """
     Returns a dictionary where the keys correspond to the resource and the values are file paths.
     Some of these resources are folders with multiple files and some are single files.
 
     Keys:
-        eqtl_cat: eQTL Catalogue, multiple eQTL studies
-        dbsnp: dbSNP, for rsid harmonization etc
-        eqtl_tokyo: significant SNPs from ImmunexUT
-        ge_tokyo: gene expression from ImmunexUT
-        eqtlgen_cis: cis-eQTLs from eQTLgen
-        eqtlgen_trans: trans-eQTLs from eQTLgen
+        - eqtl_cat: eQTL Catalogue, multiple eQTL studies
+        - dbsnp: dbSNP, for rsid harmonization etc
+        - ensembl: Ensembl, list with aliases for gene id to gene symbol conversion
+        - eqtl_tokyo: SNPs with significant eQTL signal from ImmunexUT
+        - ge_tokyo: gene expression from ImmunexUT
+        - eqtlgen_cis: cis-eQTLs from eQTLgen
+        - eqtlgen_trans: trans-eQTLs from eQTLgen
+        - tokyo_alleles: alleles corresponding to each SNP in eqtl_tokyo. NOTE: eqtl_tokyo was updated to include
+          alleles itself
+
+    :param root: path to directory where cbio3 is located in current computer. Should end in '/'
     """
     res_dict = {'eqtl_cat': root + "cbio3/data/eQTL_DB/",
                 'dbsnp': root + "cbio3/data/dbSNP/GCF_000001405.39.gz",
+                'ensembl': root + "/home/antton/cbio3/data/ensembl_biomart/gene_aliases.txt",
                 'eqtl_tokyo': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/eQTL_summarystats_with_alleles/",
                 'ge_tokyo': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/",
                 'eqtlgen_cis': root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded_REsorted_hg38.txt.gz",
@@ -31,4 +37,8 @@ def get_paths(root):
 
 
 def get_sumstats_path(root):
+    """
+    Returns the path to the combined Immune cell GWAS output summary statistics file.
+    TODO: this file should be updated.
+    """
     return root + "cbio3/projects/antton/Immune_cell_GWAS/output/GWAS/combined_output/combined_hits_only_hg38.txt"

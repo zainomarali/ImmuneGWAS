@@ -10,9 +10,6 @@ from helpers.ldlink import ldtrait
 Main script for generating a summary report for a given variant.
 """
 
-#var = Variant("rs149143617", 1, 777870, "C", "G")
-var = var = Variant.from_rsid('rs9272363')
-
 
 def generate_summary_report(variant_object: Variant):
     eqtl_cat_df = eqtl_catalogue_LDblock_query_type_restricted_multiple_types_formatted_output(variant_object)
@@ -25,6 +22,11 @@ def generate_summary_report(variant_object: Variant):
     return all_eqtl_df, ldtrait_df
 
 
-eqtl_df, pheno_df = generate_summary_report(var)
-eqtl_df.to_csv("/home/antton/Desktop/eqtl_df.csv", index=False)
-pheno_df.to_csv("/home/antton/Desktop/pheno_df.csv", index=False)
+if __name__ == '__main__':
+
+    # var = Variant("rs149143617", 1, 777870, "C", "G")
+    var = Variant.from_rsid('rs9272363')
+    var.get_LDblock().to_csv('/home/antton/Desktop/00-LDblock.csv')
+    eqtl_df, pheno_df = generate_summary_report(var)
+    eqtl_df.to_csv("/home/antton/Desktop/01-eqtl_df.csv", index=False)
+    pheno_df.to_csv("/home/antton/Desktop/02-pheno_df.csv", index=False)

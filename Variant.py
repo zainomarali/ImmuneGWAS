@@ -28,7 +28,9 @@ class Variant:
     def from_rsid(cls, rsid: str):
         """
         Alternative constructor for creating a Variant object from a rsid alone.
-        NOTE: the current approach is to use grep, but it might be too unreliable. Maybe it's better to use pandas?
+        NOTE: the current approach is to use grep, but it might be too unreliable
+
+        :param rsid: The rsID of the variant.
         """
         path = getpaths.get_sumstats_path(config.cbio_root)
         process = subprocess.Popen(["grep", "-w", rsid, path], stdout=subprocess.PIPE)  # grep the rsid from the file
