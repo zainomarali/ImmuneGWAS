@@ -28,7 +28,7 @@ def get_tokyo_eqtl_file_list() -> list:
     return tabix_indexed_files
 
 
-def single_tokyo_eqtl_query(chromosome, position) -> pd.DataFrame:
+def single_tokyo_eqtl_query(chromosome, position, EA = None) -> pd.DataFrame:
     """
     Single Tokyo eQTL query.
     Using Tabix, go through the Tokyo eQTL files (there is one per cell type) and get the entries corresponding to the
@@ -49,12 +49,13 @@ def single_tokyo_eqtl_query(chromosome, position) -> pd.DataFrame:
             # Convert iterator to pandas dataframe.
             match_list = [x for x in matches]  # Convert the generator to a list
             if match_list:
-                header = ["Gene_id", "Gene_name", "CHR", "TSS_position", "Number_of_variants_cis", "Variant_ID",
-                          "Variant_CHR", "Variant_position_start", "Variant_position_end", "Rank_of_association",
+                header = ["Gene_id", "Gene_name", "CHR", "TSS_position", "Number_of_variants_cis", "Variant_ID", "OA",
+                          "EA",  "Variant_CHR", "Variant_position_start", "Variant_position_end", "Rank_of_association",
                           "Forward_nominal_P", "Forward_slope", "Backward_P", "Backward_slope", "int_chrom"]
                 # TODO: hard-coding these feels wrong. Should at least double check this with file header.
                 match_df = pd.DataFrame(match_list, columns=header)
                 match_df["cell_type"] = celltype_file.split('_conditional_')[0].replace("sorted_", "")
+
                 list_of_celltype_match_dfs.append(match_df)
         except tabix.TabixError:
             # TODO: better message. Pretty sure this exception is thrown when the variant is not in the file,
@@ -62,7 +63,18 @@ def single_tokyo_eqtl_query(chromosome, position) -> pd.DataFrame:
             print("No output for file ", tokyo_eqtl_file)
             continue
     if list_of_celltype_match_dfs:
-        return pd.concat(list_of_celltype_match_dfs)
+        concatenated_df = pd.concat(list_of_celltype_match_dfs)
+
+        if EA:
+            if EA == concatenated_df["EA"].iloc[0]:
+                print(f"LDblock EA {EA} corresponds to Tokyo EA {concatenated_df['EA'].iloc[0]}")
+            elif EA == concatenated_df["OA"].iloc[0]:
+                print(f"LDblock EA {EA} corresponds to Tokyo OA {concatenated_df['OA'].iloc[0]}. Flipping sign of the beta.")
+                concatenated_df.Forward_slope = concatenated_df.Forward_slope * -1
+            else:
+                raise ValueError(f"WARNING: LDblock EA {EA} does not correspond to either Tokyo EA"
+                      f"{concatenated_df['EA'].iloc[0]} or Tokyo OA {concatenated_df['OA'].iloc[0]}")
+        return concatenated_df  # Results from every cell type for a single SNP
     else:
         return pd.DataFrame()  # Return an empty dataframe if no matches were found.
 
@@ -77,7 +89,7 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     :return: DataFrame with all the matches from the eQTL catalogue for the LD block of the Variant object
     """
     # Lookup for the user-inputted variant, a.k.a. the lead variant, on its own
-    lead_variant_df = single_tokyo_eqtl_query(variant_object.get_chrom(), variant_object.get_pos())
+    lead_variant_df = single_tokyo_eqtl_query(variant_object.get_chrom(), variant_object.get_pos(), EA=variant_object.get_EA())
     tokyo_eqtl_matches_list = [lead_variant_df]  # List of dfs, one per variant in LD block, used for concatenation
 
     LDblock_df = variant_object.get_LDblock()
@@ -85,16 +97,16 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
         print("WARNING: The Variant object has no LDblock attribute. Returning lead variant only.")
         return lead_variant_df
 
-    variant_positions_list_of_lists = []  # [[chromosome, position], ...]. We'll iterate over this list later
+    variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
         variant_positions_list_of_lists = LDblock_df[
-            ['chrom', 'hg38_pos']].values.tolist()  # List of lists with [chr, position] for each variant
+            ['chrom', 'hg38_pos', 'EA']].values.tolist()  # List of lists with [chr, position] for each variant
     else:  # TODO: This check could be more thorough.
         raise ValueError("LDblock dataframe has no 'chrom' or 'hg38_pos' columns.")
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:
             # DataFrame with all the matches for the variant at the position (list[0], list[1])
-            variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1])
+            variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1], variant_pos_list[2])
             tokyo_eqtl_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(tokyo_eqtl_matches_list)
 

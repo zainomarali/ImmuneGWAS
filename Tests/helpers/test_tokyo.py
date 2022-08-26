@@ -25,6 +25,16 @@ def test_single_tokyo_eqtl_query(variant_object):
     assert type(df) == pd.DataFrame
 
 
+def test_single_tokyo_eqtl_query_EA_check():
+    """
+    Test that the EA check in the single_tokyo_eqtl_query() function works. If the EA of the query does not match either
+    the EA or OA of the dataset, an error should be raised.
+    """
+    var = Variant("rs149143617", 1, 777870, "A", "G")  # EA in Tokyo is C, not A
+    with pytest.raises(ValueError):
+        single_tokyo_eqtl_query(var.get_chrom(), var.get_pos(), EA=var.get_EA())
+
+
 def test_tokyo_eqtl_ldblock_query(variant_object):
     var = variant_object
     df = tokyo_eqtl_LDblock_query(var)
