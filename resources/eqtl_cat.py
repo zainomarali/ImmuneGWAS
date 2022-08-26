@@ -179,5 +179,6 @@ def eqtl_catalogue_LDblock_query_type_restricted_multiple_types_formatted_output
     """
     df = eqtl_catalogue_to_summary_table(eqtl_catalogue_LDblock_query_type_restricted_multiple_types(variant_object,
                                                                                                      input_study_list))
+    # TODO : deduplicate df
 
     return df
