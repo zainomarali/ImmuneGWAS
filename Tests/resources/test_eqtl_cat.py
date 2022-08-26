@@ -1,4 +1,4 @@
-from helpers.eqtl_cat import *
+from resources.eqtl_cat import *
 from Variant import Variant
 import pytest
 

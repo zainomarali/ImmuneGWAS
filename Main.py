@@ -1,10 +1,9 @@
-import os
 import pandas as pd
 
 from Variant import Variant
-from helpers.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multiple_types_formatted_output
-from helpers.eqtlgen import eqtlgen_cis_LDblock_query_formatted_output
-from helpers.tokyo import tokyo_eqtl_LDblock_query_formatted_output, tokyo_eqtl_LDblock_query
+from resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multiple_types_formatted_output
+from resources.eqtlgen import eqtlgen_cis_LDblock_query_formatted_output
+from resources.tokyo import tokyo_eqtl_LDblock_query_formatted_output
 from helpers.ldlink import ldtrait
 
 """
