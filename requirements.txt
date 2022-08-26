@@ -1,0 +1,8 @@
+matplotlib
+openpyxl
+pandas==1.4.2
+pytabix==0.1
+pytest==7.1.1
+regex
+requests
+seaborn

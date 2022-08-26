@@ -150,10 +150,13 @@ def tokyo_eqtl_to_summary_table(tokyo_eqtl_df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def tokyo_eqtl_LDblock_query_formatted_output(variant_object: Variant) -> pd.DataFrame:
+def tokyo_eqtl_LDblock_query_simple(variant_object: Variant) -> pd.DataFrame:
     """
     Call :py:func:`tokyo_eqtl_LDblock_query` and :py:func:`tokyo_eqtl_to_summary_table` to get the summary table
-    directly, without the full table.
+    directly, without the full table. It is essentially the same as calling :py:func:`tokyo_eqtl_LDblock_query` but
+    the output table only contains a subset of the columns.
+
+    :param variant_object: Variant object
     """
     df = tokyo_eqtl_to_summary_table(tokyo_eqtl_LDblock_query(variant_object))
 

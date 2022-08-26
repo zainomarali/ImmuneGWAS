@@ -146,8 +146,8 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
     return concat_df
 
 
-def eqtl_catalogue_LDblock_query_type_restricted_multiple_types(variant_object: Variant,
-                                                                input_study_list: list = None) -> pd.DataFrame:
+def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Variant,
+                                                           input_study_list: list = None) -> pd.DataFrame:
     """
     Go through the eQTL catalogue studies of all types and return the eQTLs that are significant for every variant.
     :param variant_object: Variant object
@@ -198,18 +198,18 @@ def eqtl_catalogue_to_summary_table(eqtl_cat_df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def eqtl_catalogue_LDblock_query_type_restricted_multiple_types_formatted_output(variant_object: Variant,
-                                                                                 input_study_list: list = None) -> pd.DataFrame:
+def eqtl_catalogue_LDblock_query_type_restricted_multitype_simple(variant_object: Variant,
+                                                                  input_study_list: list = None) -> pd.DataFrame:
     """
-    Call :py:func:`tokyo_eqtl_LDblock_query` and :py:func:`tokyo_eqtl_to_summary_table` to get the summary table
-    directly, without the full table.
+    Call :py:func:`eqtl_catalogue_LDblock_query_type_restricted_multitype` and
+    :py:func:`eqtl_catalogue_to_summary_table` to get the simplified summary table directly, without the full table.
 
     :param variant_object: Variant object
     :param input_study_list: list of study types to query. Should be a list containing a slice of the list
     ['ge', 'exon', 'tx', 'txrev' and 'microarray']. If none is specified, all study types are queried.
     """
-    df = eqtl_catalogue_to_summary_table(eqtl_catalogue_LDblock_query_type_restricted_multiple_types(variant_object,
-                                                                                                     input_study_list))
+    df = eqtl_catalogue_to_summary_table(eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object,
+                                                                                                input_study_list))
     df.drop_duplicates(inplace=True)  # Remove duplicates
 
     return df

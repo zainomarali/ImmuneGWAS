@@ -137,10 +137,12 @@ def eqtlgen_cis_to_summary_table(eqtlgen_df: pd.DataFrame) -> pd.DataFrame:
     return df
 
 
-def eqtlgen_cis_LDblock_query_formatted_output(variant_object: Variant) -> pd.DataFrame:
+def eqtlgen_cis_LDblock_query_simple(variant_object: Variant) -> pd.DataFrame:
     """
     Call :py:func:`eqtlgen_cis_LDblock_query` and :py:func:`eqtlgen_cis_to_summary_table` to get the summary table
     directly, without the full table.
+
+    :param variant_object: Variant object
     """
     df = eqtlgen_cis_to_summary_table(eqtlgen_cis_LDblock_query(variant_object))
 
