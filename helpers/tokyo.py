@@ -100,13 +100,17 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
         variant_positions_list_of_lists = LDblock_df[
-            ['chrom', 'hg38_pos', 'EA']].values.tolist()  # List of lists with [chr, position] for each variant
+            ['chrom', 'hg38_pos', 'EA', 'RS_Number']].values.tolist()  # List of lists with [chr, position] for each variant
     else:  # TODO: This check could be more thorough.
         raise ValueError("LDblock dataframe has no 'chrom' or 'hg38_pos' columns.")
     if variant_positions_list_of_lists:
-        for variant_pos_list in variant_positions_list_of_lists:
-            # DataFrame with all the matches for the variant at the position (list[0], list[1])
-            variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1], variant_pos_list[2])
+        for variant_pos_list in variant_positions_list_of_lists:  # Iterate over the LDblock, make a query for each SNP
+            # Create a DataFrame with all the matches for the variant at the position (list[0], list[1])
+            variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1], EA=variant_pos_list[2])
+            if not variant_df.empty:
+                print(  # Companion message for the print statement in single_tokyo_eqtl_query. Should be stored in log
+                    f" for variant {variant_pos_list[3]} at position {variant_pos_list[1]} on chromosome {variant_pos_list[0]}:")
+
             tokyo_eqtl_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(tokyo_eqtl_matches_list)
 
@@ -138,8 +142,6 @@ def tokyo_eqtl_to_summary_table(tokyo_eqtl_df: pd.DataFrame) -> pd.DataFrame:
     df = tokyo_eqtl_df[["Gene_id", "cell_type", "Forward_nominal_P", "Forward_slope"]].copy()
     df.columns = ["gene_id", "cell_type", "p_value", "beta"]
     df["resource"] = "Tokyo"
-
-    # TODO: Harmonize the sign of the beta so that the sign corresponds to the EA
 
     return df
 
