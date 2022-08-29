@@ -1,5 +1,5 @@
 import pytest
-from resources.tokyo import *
+from resources.tokyo_eqtl import *
 from Variant import Variant
 import pandas as pd
 

@@ -4,7 +4,7 @@ import pandas as pd
 from Variant import Variant
 from resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multitype
 from resources.eqtlgen import eqtlgen_cis_LDblock_query
-from resources.tokyo import tokyo_eqtl_LDblock_query
+from resources.tokyo_eqtl import tokyo_eqtl_LDblock_query
 from helpers.ldlink import ldtrait
 from config import output_folder
 
