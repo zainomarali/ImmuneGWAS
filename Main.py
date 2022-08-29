@@ -6,13 +6,21 @@ from resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_mult
 from resources.eqtlgen import eqtlgen_cis_LDblock_query
 from resources.tokyo import tokyo_eqtl_LDblock_query
 from helpers.ldlink import ldtrait
+from config import output_folder
 
 """
 Main script for generating a summary report for a given variant.
 """
 
 
-def generate_full_excel_file(variant, output_file):
+def generate_full_excel_file(variant, output_file=output_folder+'full_report.xlsx'):
+    """
+    Generate an Excel file with all the information for a given variant.
+
+    :param variant: Variant object to generate the report for.
+    :param output_file: Name of the output file. By default, it will be called 'full_report.xlsx' and be saved in the
+    output folder specified in the config directory.
+    """
     with ExcelWriter(f'{output_file}.xlsx') as writer:
         eqtl_cat_df = eqtl_catalogue_LDblock_query_type_restricted_multitype(variant, ['ge', 'microarray'])
         eqtl_cat_df.to_excel(writer, sheet_name='eqtl_cat', index=False)
@@ -31,5 +39,5 @@ if __name__ == '__main__':
 
     # var = Variant("rs149143617", 1, 777870, "C", "G")
     var = Variant.from_rsid('rs9272363')
-    var.get_LDblock().to_csv('/home/antton/Desktop/00-LDblock.csv')
-    generate_full_excel_file(var, '/home/antton/Desktop/01-FullReport')
+    var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
+    generate_full_excel_file(var, output_folder+'01-FullReport')
