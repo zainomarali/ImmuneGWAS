@@ -9,7 +9,6 @@ The chromosomes are named by accession names instead of chromosome numbers. E.g.
 For more information, check README file in cbio3/data/dbSNP/
 """
 
-# TODO: add pytabix to requirements.txt
 dbsnp_path = get_paths(config.cbio_root)['dbsnp']  # Path to dbSNP file
 
 path_to_chr_RefSeq = '/'.join(

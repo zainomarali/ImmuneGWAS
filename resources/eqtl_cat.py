@@ -1,4 +1,5 @@
 from helpers.getpaths import get_paths
+from helpers.ensembl import get_gene_symbol
 from Variant import Variant
 import config
 import os
@@ -74,6 +75,10 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
                 # TODO: header could be a lookup from the bare file instead of hard coding.
 
                 df = pd.DataFrame(match_list, columns=headers)  # DataFrame with all the matches from the study
+
+                # Convert gene ID to gene symbol
+                df.insert(1, "gene_symbol", df["molecular_trait_id"].apply(get_gene_symbol))
+                # Get study name, type and cell-type from file name
                 study_name_split = study.split(f"_{study_type_key}_")
                 df["study"] = study_name_split[0]  # Add the study name to the dataframe
                 df["study_type"] = 'ge'  # Add the study type to the dataframe
@@ -87,7 +92,8 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
             continue
     if list_of_study_match_dfs:
         concatenated_df = pd.concat(list_of_study_match_dfs)
-        if EA:  # EA check. The ALT allele should always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/)
+        # EA check!:
+        if EA:  # In eQTLcat ALT should always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/)
             if EA == concatenated_df["alt"].iloc[0]:
                 pass
             elif concatenated_df["alt"].iloc[0][0] == concatenated_df["ref"].iloc[0][0]:  # Deletion/addition case

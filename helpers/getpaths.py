@@ -26,7 +26,7 @@ def get_paths(root: str) -> dict:
     """
     res_dict = {'eqtl_cat': root + "cbio3/data/eQTL_DB/",
                 'dbsnp': root + "cbio3/data/dbSNP/GCF_000001405.39.gz",
-                'ensembl': root + "/home/antton/cbio3/data/ensembl_biomart/gene_aliases.txt",
+                'ensembl': root + "cbio3/data/ensembl_biomart/gene_aliases.txt",
                 'eqtl_tokyo': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/eQTL_summarystats_with_alleles/",
                 'ge_tokyo': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/",
                 'eqtlgen_cis': root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded_REsorted_hg38.txt.gz",
