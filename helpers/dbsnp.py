@@ -1,6 +1,8 @@
+import tabix
+import logging
+
 from helpers.getpaths import get_paths
 import config
-import tabix
 
 """
 Access the dbSNP file in cbio3.
@@ -32,7 +34,7 @@ def dbsnp_single_position_query(SNP_chr: int, SNP_pos: int):
     # The columns in the dbSNP file are: CHROM POS ID REF ALT QUAL FILTER INFO
     match_list = [x for x in matches]  # Convert the generator to a list
     if not match_list:
-        print(f"WARNING: No matches for {SNP_chr}:{SNP_pos}-{SNP_pos}")
+        logging.warning(f"No matches for {SNP_chr}:{SNP_pos}-{SNP_pos}")
         return None
     else:
         return match_list  # This will be a list with a variable number of elements.

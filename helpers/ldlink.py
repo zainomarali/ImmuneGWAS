@@ -74,7 +74,6 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
     """
     logging.info(f"Accessing LDproxy API for {rsid}")
 
-
     token = 'da0eb217dded'  # this is the token I got for API access can be different for other users
     # these populations were selected for closeness to Nordic population - can also be altered
     params = (

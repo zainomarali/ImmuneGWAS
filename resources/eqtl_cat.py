@@ -38,7 +38,7 @@ def get_studies_of_type(study_type_key: str) -> list:
             if os.path.exists(eqtl_cat_path + "/" + study + ".tbi"):
                 studies_of_type.append(study)
             else:
-                print(f"WARNING: no tabix index file could be found for {study} .")
+                logging.warning(f"No tabix index file could be found for {study} .")
     return studies_of_type
 
 
@@ -91,7 +91,8 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
         except tabix.TabixError:
             # TODO: better message. Pretty sure this exception is thrown when the variant is not in the file,
             #  so it's not really an error, just that the variant is not there
-            print("Something went wrong when trying to access the file ", eqtl_cat_file, ". Skipping this study.")
+            logging.exception("'tabix.TabixError' exception raised. Something went wrong when trying to access the file"
+                              " ", eqtl_cat_file, ". Skipping this study.")
             continue
     if list_of_study_match_dfs:
         concatenated_df = pd.concat(list_of_study_match_dfs)
@@ -139,7 +140,7 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
         variant_positions_list_of_lists = LDblock_df[
             ['chrom', 'hg38_pos', 'EA']].values.tolist()  # List of lists with [chr, position] for each variant
     else:  # TODO: This check could be better. If the columns doesn't exist probably means dataframe is empty.
-        print("No keys 'chrom', 'hg38_pos' in LDblock_df.columns. Returning lead variant only.")
+        logging.warning("No keys 'chrom', 'hg38_pos' in LDblock_df.columns. Returning lead variant only.")
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:
             # DataFrame with all the matches from eQTL cat studies for the variant at the position (list[0], list[1])
@@ -147,7 +148,7 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
                 variant_df = single_eqtl_catalogue_query_type_restricted(variant_pos_list[0], variant_pos_list[1],
                                                                          study_type_key, EA=variant_pos_list[2])
             except ValueError as err_msg:  # Avoid breaking if alleles don't match, but report it and don't add to list
-                print("WARNING: ", err_msg)
+                logging.warning(err_msg)
                 continue
             eqtl_cat_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(eqtl_cat_matches_list)
@@ -196,7 +197,7 @@ def eqtl_catalogue_to_summary_table(eqtl_cat_df: pd.DataFrame) -> pd.DataFrame:
     :return: Summary table with the above columns.
     """
     if eqtl_cat_df.empty:
-        print("WARNING: No matches found in eQTL catalogue. Returning empty dataframe.")
+        logging.warning("No matches found in eQTL catalogue. Returning empty dataframe.")
         return pd.DataFrame()
     elif not {"molecular_trait_id", "cell_type", "pip", "z"}.issubset(eqtl_cat_df.columns):
         raise ValueError("Dataframe does not have the required columns. Required columns are: "
