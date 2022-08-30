@@ -1,5 +1,6 @@
 from pandas import ExcelWriter
 import pandas as pd
+import logging
 
 from Variant import Variant
 from resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multitype
@@ -39,9 +40,12 @@ def generate_full_excel_file(variant, output_file=output_folder+'full_report.xls
 
 if __name__ == '__main__':
 
+    logging.info('Started new run.')
+
     # var = Variant("rs149143617", 1, 777870, "C", "G")
 
-    # var = Variant.from_rsid('rs9272363')
-    # var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
-    # generate_full_excel_file(var, output_folder+'01-FullReport')
-    print(plot_tokyo_ge(["ENSG00000000419", "ENSG00000004776", "ENSG00000284725", "ENSG00000284747"]))
+    var = Variant.from_rsid('rs9272363')
+    var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
+    generate_full_excel_file(var, output_folder+'01-FullReport')
+    #print(plot_tokyo_ge(["ENSG00000000419", "ENSG00000004776", "ENSG00000284725", "ENSG00000284747"]))
+    logging.info('Finished run.')

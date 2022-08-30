@@ -1,7 +1,8 @@
-import requests
 import pandas as pd
 import warnings
+import requests
 from requests.structures import CaseInsensitiveDict
+import logging
 
 
 """
@@ -28,6 +29,7 @@ def ldtrait(rsid, pop='"CEU+FIN+GBR+TSI+IBS"'):
     :param rsid: rsid you are interested in
     :param pop: Populations to use in the LDProxy query. Default is European.
     """
+    logging.info(f"Accessing LDtrait API for {rsid}")
 
     headers = CaseInsensitiveDict()
     headers["Content-Type"] = "application/json"
@@ -56,6 +58,9 @@ def ldtrait(rsid, pop='"CEU+FIN+GBR+TSI+IBS"'):
         row = inputlist[i].split('\t')
         if len(row) == len(df.columns):
             df.loc[i] = (inputlist[i].split('\t'))
+
+    logging.info("LDtrait request complete.")
+
     return df
 
 
@@ -67,6 +72,8 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
     :param pop: Populations to use in the LDProxy query. Default is European.
     :param threshold: R2 threshold. 0.8 by default
     """
+    logging.info(f"Accessing LDproxy API for {rsid}")
+
 
     token = 'da0eb217dded'  # this is the token I got for API access can be different for other users
     # these populations were selected for closeness to Nordic population - can also be altered
@@ -102,5 +109,8 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
         df.R2 = df.R2.astype(float)
         df = df[df.R2 > threshold]
     else:
-        print("ERROR: df lacks 'R2' column. It might be empty.")
+        logging.error("df lacks 'R2' column. It might be empty.")
+
+    logging.info("LDproxy request complete.")
+
     return df

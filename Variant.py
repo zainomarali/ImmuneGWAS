@@ -1,5 +1,7 @@
 import subprocess
 import pandas as pd
+import logging
+
 from helpers import getpaths, dbsnp, ldlink  # Import all the helper functions
 import config
 
@@ -21,7 +23,9 @@ class Variant:
         self.OA = OA
         self.LDblock = None  # Initialize an empty LDblock attribute. LDblock will be a pandas dataframe later.
 
+        logging.info(f"Variant {self.rsid} initialised.")
         self.__cross_reference_dbsnp()  # Sanity check the variant against the dbSNP database.
+        logging.info(f"Variant {self.rsid} successfully cross-referenced with dbSNP.")
         self.set_LDblock()  # Set the LDblock attribute for the Variant.
 
     @classmethod
@@ -54,7 +58,8 @@ class Variant:
         """
         dbsnp_row_list = dbsnp.dbsnp_single_position_query(self.chrom, self.pos)  # Full dbSNP row for the position
         if len(dbsnp_row_list) > 1:  # There's supposed to only be one row, but just in case...
-            print(f"Multiple dbSNP rows found for {self.chrom}:{self.pos}. Using the first one for cross-reference.")
+            logging.warning(f"Multiple dbSNP rows found for {self.chrom}:{self.pos}."
+                            "Using only the first one for cross-reference.")
         dbsnp_row = dbsnp_row_list[0]
         # The columns in the dbSNP file are: CHROM POS ID REF ALT QUAL FILTER INFO
         dbsnp_rsid = dbsnp_row[2]  # dbSNP rsID for the position

@@ -1,10 +1,13 @@
+import os
+import pandas as pd
+import tabix
+import logging
+
 from helpers.getpaths import get_paths
 from helpers.ensembl import get_gene_symbol
 from Variant import Variant
 import config
-import os
-import pandas as pd
-import tabix
+
 
 eqtl_cat_path = get_paths(config.cbio_root)[
                     'eqtl_cat'] + "/curated_crediblesets"  # Path to eQTL catalogue directory. Contains several files.
@@ -160,6 +163,9 @@ def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Varia
     :param input_study_list: list of study types to query. Should be a list containing a slice of the list
     ['ge', 'exon', 'tx', 'txrev' and 'microarray']. If none is specified, all study types are queried.
     """
+    logging.info(f"Querying eQTL catalogue files for full LD block of Variant {variant_object.rsid}, for study types: "
+                 f"{', '.join(input_study_list)}")
+
     df_list = []
     if input_study_list is None:
         study_list = ['ge', 'exon', 'tx', 'txrev', 'microarray']
@@ -170,6 +176,7 @@ def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Varia
             raise ValueError("Invalid study type specified. study_type_key must be one of 'ge', 'exon', 'tx', "
                              "'txrev' or 'microarray'")
         df_list.append(eqtl_catalogue_LDblock_query_type_restricted(variant_object, study_type_key))
+    logging.info("Query to eQTL catalogue finished.")
     return pd.concat(df_list)
 
 

@@ -1,5 +1,7 @@
 import pandas as pd
 import os
+import logging
+
 from helpers.getpaths import get_paths
 from Variant import Variant
 import config
@@ -23,7 +25,7 @@ def get_tokyo_eqtl_file_list() -> list:
             if os.path.exists(tokyo_eqtl_path + "/" + file + ".tbi"):
                 tabix_indexed_files.append(file)
             else:
-                print(f"WARNING: {file} is sorted and bgzipped, but no tabix index file exists.")
+                logging.warning(f"{file} is sorted and bgzipped, but no tabix index file exists for it.")
 
     return tabix_indexed_files
 
@@ -61,20 +63,20 @@ def single_tokyo_eqtl_query(chromosome, position, EA=None) -> pd.DataFrame:
         except tabix.TabixError:
             # TODO: better message. Pretty sure this exception is thrown when the variant is not in the file,
             #  so it's not really an error, just that the variant is not there (?)
-            print("No output for file ", tokyo_eqtl_file)
+            logging.exception("'tabix.TabixError' raised. No output for file ", tokyo_eqtl_file)
             continue
     if list_of_celltype_match_dfs:
         concatenated_df = pd.concat(list_of_celltype_match_dfs)
 
         if EA:
             if EA == concatenated_df["EA"].iloc[0]:
-                print(f"LDblock EA {EA} corresponds to Tokyo EA {concatenated_df['EA'].iloc[0]}")
+                logging.info(f"LDblock EA {EA} corresponds to Tokyo EA {concatenated_df['EA'].iloc[0]}")
             elif EA == concatenated_df["OA"].iloc[0]:
-                print(
-                    f"LDblock EA {EA} corresponds to Tokyo OA {concatenated_df['OA'].iloc[0]}. Flipping sign of the beta.")
+                logging.info(f"LDblock EA {EA} corresponds to Tokyo OA {concatenated_df['OA'].iloc[0]}. "
+                             f"Sign of the beta flipped.")
                 concatenated_df.Forward_slope = concatenated_df.Forward_slope * -1
             else:
-                raise ValueError(f"WARNING: LDblock EA {EA} does not correspond to either Tokyo EA"
+                raise ValueError(f"ERROR: LDblock EA {EA} does not correspond to either Tokyo EA"
                                  f"{concatenated_df['EA'].iloc[0]} or Tokyo OA {concatenated_df['OA'].iloc[0]}")
         return concatenated_df  # Results from every cell type for a single SNP
     else:
@@ -90,6 +92,8 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     :param variant_object: Variant object
     :return: DataFrame with all the matches from the eQTL catalogue for the LD block of the Variant object
     """
+    logging.info(f"Querying Tokyo eQTL file for full LD block of Variant {variant_object.rsid}")
+
     # Lookup for the user-inputted variant, a.k.a. the lead variant, on its own
     lead_variant_df = single_tokyo_eqtl_query(variant_object.get_chrom(), variant_object.get_pos(),
                                               EA=variant_object.get_EA())
@@ -97,7 +101,7 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
 
     LDblock_df = variant_object.get_LDblock()
     if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
-        print("WARNING: The Variant object has no LDblock attribute. Returning lead variant only.")
+        logging.warning("The Variant object has no LDblock attribute. Returning lead variant only.")
         return lead_variant_df
 
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
@@ -112,11 +116,13 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
             # Create a DataFrame with all the matches for the variant at the position (list[0], list[1])
             variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1], EA=variant_pos_list[2])
             if not variant_df.empty:
-                print(  # Companion message for the print statement in single_tokyo_eqtl_query. Should be stored in log
-                    f" for variant {variant_pos_list[3]} at position {variant_pos_list[1]} on chromosome {variant_pos_list[0]}:")
+                # Companion message for message coming from single_tokyo_eqtl_query.
+                logging.info(f" ...for variant {variant_pos_list[3]} at position {variant_pos_list[1]} on chromosome "
+                             f"{variant_pos_list[0]}:")
 
             tokyo_eqtl_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(tokyo_eqtl_matches_list)
+    logging.info(f"Query to Tokyo eQTL file complete.")
 
     return concat_df
 
@@ -137,7 +143,7 @@ def tokyo_eqtl_to_summary_table(tokyo_eqtl_df: pd.DataFrame) -> pd.DataFrame:
     :return: Summary table with the above columns.
     """
     if tokyo_eqtl_df.empty:
-        print("WARNING: No matches found in Tokyo eQTL dataset. Returning empty dataframe.")
+        logging.warning("No matches found in Tokyo eQTL dataset. Returning empty dataframe.")
         return pd.DataFrame()
     elif not {"Gene_id", "cell_type", "Forward_nominal_P", "Forward_slope"}.issubset(tokyo_eqtl_df.columns):
         raise ValueError("Input dataframe does not have the required columns. The required columns are: Gene_id, "
