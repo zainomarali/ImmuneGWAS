@@ -5,8 +5,10 @@ from Variant import Variant
 from resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multitype
 from resources.eqtlgen import eqtlgen_cis_LDblock_query
 from resources.tokyo_eqtl import tokyo_eqtl_LDblock_query
+from resources.tokyo_ge import tokyo_ge_query
 from helpers.ldlink import ldtrait
 from config import output_folder
+from plotting import plot_tokyo_ge
 
 """
 Main script for generating a summary report for a given variant.
@@ -38,6 +40,8 @@ def generate_full_excel_file(variant, output_file=output_folder+'full_report.xls
 if __name__ == '__main__':
 
     # var = Variant("rs149143617", 1, 777870, "C", "G")
-    var = Variant.from_rsid('rs9272363')
-    var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
-    generate_full_excel_file(var, output_folder+'01-FullReport')
+
+    # var = Variant.from_rsid('rs9272363')
+    # var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
+    # generate_full_excel_file(var, output_folder+'01-FullReport')
+    print(plot_tokyo_ge(["ENSG00000000419", "ENSG00000004776", "ENSG00000284725", "ENSG00000284747"]))

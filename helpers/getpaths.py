@@ -28,7 +28,7 @@ def get_paths(root: str) -> dict:
                 'dbsnp': root + "cbio3/data/dbSNP/GCF_000001405.39.gz",
                 'ensembl': root + "cbio3/data/ensembl_biomart/gene_aliases.json",
                 'eqtl_tokyo': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/eQTL_summarystats_with_alleles/",
-                'ge_tokyo': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/tpm/",
+                'ge_tokyo': root + "cbio3/projects/Zain_2021/ImmunexUT_GE/E-GEAD-397.processed/antton_reprocessing/mean_table_TPM.txt",
                 'eqtlgen_cis': root + "cbio3/projects/Zain_2021/eQTLgen/data/2019-12-11-cis-eQTLsFDR0.05-ProbeLevel-CohortInfoRemoved-BonferroniAdded_REsorted_hg38.txt.gz",
                 'eqtlgen_trans': root + "cbio3/projects/Zain_2021/eQTLgen/data/2018-09-04-trans-eQTLsFDR0.05-CohortInfoRemoved-BonferroniAdded_sorted_hg38.txt.gz",
                 'tokyo_alleles': root + "cbio3/projects/Zain_2021/ImmuNEXT_Japan_Cell2021/metadata/full_allele_defs.txt"}
