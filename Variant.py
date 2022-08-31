@@ -3,6 +3,7 @@ import pandas as pd
 import logging
 
 from helpers import getpaths, dbsnp, ldlink  # Import all the helper functions
+import resources.immune_GWAS as immune_GWAS
 import config
 
 
@@ -22,11 +23,13 @@ class Variant:
         self.EA = EA
         self.OA = OA
         self.LDblock = None  # Initialize an empty LDblock attribute. LDblock will be a pandas dataframe later.
+        self.phenotypes = []  # Initialize an empty list of phenotypes.
 
         logging.info(f"Variant {self.rsid} initialised.")
         self.__cross_reference_dbsnp()  # Sanity check the variant against the dbSNP database.
         logging.info(f"Variant {self.rsid} successfully cross-referenced with dbSNP.")
-        self.set_LDblock()  # Set the LDblock attribute for the Variant.
+        self.set_LDblock()  # Set the LDblock attribute for the Variant. No input means calculate using LDlink.
+        self.__gwas_output_lookup()
 
     @classmethod
     def from_rsid(cls, rsid: str):
@@ -92,6 +95,18 @@ class Variant:
 
         return allele_dict
 
+    def __gwas_output_lookup(self) -> None:
+        """
+        Look up the GWAS output for the LD block of the variant. What phenotypes is the LDblock associated with?
+        This method gets called by the constructor.
+        """
+        logging.info(f"Performing lookup of GWAS phenotypes for variant {self.rsid}'s LDblock.")
+        gwas_hits_df = immune_GWAS.immuneGWAS_LDblock_query(self)
+        if not gwas_hits_df.empty:
+            self.phenotypes = gwas_hits_df["Phenotype"].unique().tolist()
+        else:
+            logging.warning(f"No GWAS hits found for the LDblock of {self.rsid}.")
+
     def get_rsid(self):
         return self.rsid
 
@@ -112,6 +127,9 @@ class Variant:
 
     def get_LDblock(self):
         return self.LDblock
+
+    def get_phenotypes(self):
+        return self.phenotypes
 
     def set_LDblock(self, calculate: bool = True, new_df: pd.DataFrame = None) -> None:
         """

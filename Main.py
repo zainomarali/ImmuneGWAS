@@ -45,7 +45,8 @@ if __name__ == '__main__':
     # var = Variant("rs149143617", 1, 777870, "C", "G")
 
     var = Variant.from_rsid('rs9272363')
-    var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
-    generate_full_excel_file(var, output_folder+'01-FullReport')
+    print(var.get_phenotypes())
+    #var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
+    #generate_full_excel_file(var, output_folder+'01-FullReport')
     #print(plot_tokyo_ge(["ENSG00000000419", "ENSG00000004776", "ENSG00000284725", "ENSG00000284747"]))
     logging.info('Finished run.')
