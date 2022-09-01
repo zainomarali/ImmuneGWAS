@@ -1,7 +1,13 @@
 import logging
 
-cbio_root = "/media/ludvig/"  # Path to cbio3 without the cbio3 name
-output_folder = "/media/ludvig/Project_Storage/BloodVariome/Immune_flow_GWAS/results/immuneGWAS_output/"  # Destination for output files
+cbio_root = "/default/path/to/cbio/"  # Path to cbio3
+output_folder = "/default/path/to/output/folder/"  # Destination for output files
+
+if cbio_root == "/default/path/to/cbio/":
+    raise ValueError("Default path to cbio3 is used. Please change this in config.py")
+
+if output_folder == "/default/path/to/output/folder/":
+    raise ValueError("Default path to output folder is used. Please change this in config.py")
 
 # Initialize logging
 logging.basicConfig(filename=output_folder + "ImmuneGWAS.log",
