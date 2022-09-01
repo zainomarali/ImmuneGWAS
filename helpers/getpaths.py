@@ -24,6 +24,10 @@ def get_paths(root: str) -> dict:
 
     :param root: path to directory where cbio3 is located in current computer. Should end in '/'
     """
+
+    if root.endswith('cbio3/'):
+        root = root[:-6]  # Remove the cbio3/ from the end of the path
+
     res_dict = {'eqtl_cat': root + "cbio3/data/eQTL_DB/",
                 'dbsnp': root + "cbio3/data/dbSNP/GCF_000001405.39.gz",
                 'ensembl': root + "cbio3/data/ensembl_biomart/gene_aliases.json",
