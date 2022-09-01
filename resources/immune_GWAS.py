@@ -68,5 +68,5 @@ def immuneGWAS_LDblock_query(variant_object: Variant) -> pd.DataFrame:
             immuneGWAS_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(immuneGWAS_matches_list)
     logging.info(f"Query to immuneGWAS output file complete.")
-    
+
     return concat_df
