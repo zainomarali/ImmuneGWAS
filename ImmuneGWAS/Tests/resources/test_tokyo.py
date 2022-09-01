@@ -10,7 +10,7 @@ def test_get_tokyo_eqtl_file_list():
     assert type(file_list) == list
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def variant_object():
     """
     Create a variant object that can be reused in multiple tests.

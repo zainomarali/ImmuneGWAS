@@ -9,12 +9,12 @@ and a reason for the tests failing could be the the LDlink database itself has c
 """
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def ldproxy_df():
     return ldproxy('rs16886165')
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def ldtrait_df():
     return ldtrait('rs16886165')
 
