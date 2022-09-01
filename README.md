@@ -9,3 +9,11 @@ The following databases are available, listed here under the names used in the s
 * **eQTL cat**: a database of eQTLs from the [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/) project, by EMBL-EBI.
 * **eQTLGen**: a database of eQTLs by the [eQTLGen](https://www.eqtlgen.org/) Consortium. Both cis-eQTL and trans-eQTL 
 datasets are available.
+
+The package is installed by typing
+
+    pip install -e .
+
+In the root folder, the package can then be imported as 
+    
+    import ImmuneGWAS

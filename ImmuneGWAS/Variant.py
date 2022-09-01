@@ -7,6 +7,60 @@ import ImmuneGWAS.resources.immune_GWAS as immune_GWAS
 import ImmuneGWAS.config as config
 
 
+class results:
+    """
+    Simple container class to store the results of a variant query.
+    This class is always instantiated as a member of a variant class object.
+    """
+
+    eqtl_cat_df = None
+    eqtlgen_cis_df = None
+    tokyo_eqtl_df = None
+    ldtrait_df = None
+
+    def __init__(self):
+        pass
+
+    def set_eqtl_cat_df(self, df):
+        self.eqtl_cat_df = df
+
+    def set_eqtlgen_cis_df(self, df):
+        self.eqtlgen_cis_df = df
+
+    def set_tokyo_df(self, df):
+        self.tokyo_df = df
+
+    def set_ldtrait_df(self, df):
+        self.ldtrait_df = df
+
+    def eqtl_cat(self):
+        if self.eqtl_cat_df is None:
+            logging.info('No eqtl_cat dataframe found.')
+            return None
+        else:
+            return self.eqtl_cat_df
+
+    def eqtlgen_cis(self):
+        if self.eqtlgen_cis_df is None:
+            logging.info('No eqtlgen_cis dataframe found.')
+            return None
+        else:
+            return self.eqtlgen_cis_df
+
+    def tokyo_eqtl(self):
+        if self.tokyo_eqtl_df is None:
+            logging.info('No tokyo dataframe found.')
+            return None
+        else:
+            return self.tokyo_eqtl_df
+
+    def ldtrait(self):
+        if self.ldtrait_df is None:
+            logging.info('No ldtrait dataframe found.')
+            return None
+        else:
+            return self.ldtrait_df
+
 class Variant:
     def __init__(self, rsid: str, chrom: int, pos: int, EA: str, OA: str):
         """
@@ -24,6 +78,8 @@ class Variant:
         self.OA = OA
         self.LDblock = None  # Initialize an empty LDblock attribute. LDblock will be a pandas dataframe later.
         self.gwas_phenotypes = []  # Initialize an empty list of gwas_phenotypes.
+
+        self.results = results()  # Initialize a results object.
 
         logging.info(f"Variant {self.rsid} initialised.")
         self.__cross_reference_dbsnp()  # Sanity check the variant against the dbSNP database.
@@ -153,3 +209,4 @@ class Variant:
             self.LDblock = df
         else:
             self.LDblock = new_df
+

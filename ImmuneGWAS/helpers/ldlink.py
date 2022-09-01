@@ -3,6 +3,7 @@ import warnings
 import requests
 from requests.structures import CaseInsensitiveDict
 import logging
+import ImmuneGWAS.Variant as Variant
 
 
 """
@@ -21,14 +22,15 @@ Downstream processing needed:
 
 warnings.filterwarnings('ignore')
 
-
-def ldtrait(rsid, pop='"CEU+FIN+GBR+TSI+IBS"'):
+def ldtrait(var_obj, pop='"CEU+FIN+GBR+TSI+IBS"'):
     """
     Access LDtrait and get all the available traits for the requested SNP.
 
     :param rsid: rsid you are interested in
     :param pop: Populations to use in the LDProxy query. Default is European.
     """
+
+    rsid = var_obj.get_rsid()
     logging.info(f"Accessing LDtrait API for {rsid}")
 
     headers = CaseInsensitiveDict()
@@ -61,7 +63,9 @@ def ldtrait(rsid, pop='"CEU+FIN+GBR+TSI+IBS"'):
 
     logging.info("LDtrait request complete.")
 
-    return df
+    var_obj.results.set_ldtrait_df(df)
+
+    return
 
 
 def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):

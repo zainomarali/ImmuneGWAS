@@ -163,7 +163,7 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
 
 
 def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Variant,
-                                                           input_study_list: list = None) -> pd.DataFrame:
+                                                           input_study_list: list = None):
     """
     Go through the eQTL catalogue studies of all types and return the eQTLs that are significant for every variant.
     :param variant_object: Variant object
@@ -184,7 +184,9 @@ def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Varia
                              "'txrev' or 'microarray'")
         df_list.append(eqtl_catalogue_LDblock_query_type_restricted(variant_object, study_type_key))
     logging.info("Query to eQTL catalogue finished.")
-    return pd.concat(df_list)
+    variant_object.results.set_eqtl_cat_df(pd.concat(df_list))
+    return
+
 
 
 def eqtl_catalogue_to_summary_table(eqtl_cat_df: pd.DataFrame) -> pd.DataFrame:

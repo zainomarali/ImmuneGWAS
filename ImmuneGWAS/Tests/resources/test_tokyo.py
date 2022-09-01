@@ -37,7 +37,8 @@ def test_single_tokyo_eqtl_query_EA_check():
 
 def test_tokyo_eqtl_ldblock_query(variant_object):
     var = variant_object
-    df = tokyo_eqtl_LDblock_query(var)
+    tokyo_eqtl_LDblock_query(var)
+    df = var.results.tokyo_eqtl()
     assert df is not None
     assert type(df) == pd.DataFrame
 
@@ -64,3 +65,4 @@ def test_tokyo_eqtl_ldblock_query_corrupted_ldblock(variant_object):
     var.set_LDblock(False, pd.DataFrame(columns=['wrong', 'column', 'names'], data=[[1, 2, 3]]))
     with pytest.raises(ValueError):
         tokyo_eqtl_LDblock_query(var)
+

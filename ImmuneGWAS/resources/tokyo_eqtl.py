@@ -83,7 +83,7 @@ def single_tokyo_eqtl_query(chromosome, position, EA=None) -> pd.DataFrame:
         return pd.DataFrame()  # Return an empty dataframe if no matches were found.
 
 
-def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
+def tokyo_eqtl_LDblock_query(variant_object: Variant):
     """
     Query the Tokyo eQTL catalogue for each variant in the LD block of the Variant object.
     It calls :py:func:`single_tokyo_eqtl_query` for each variant in the LD block, stores each output dataframe in a
@@ -102,7 +102,8 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     LDblock_df = variant_object.get_LDblock()
     if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
         logging.warning("The Variant object has no LDblock attribute. Returning lead variant only.")
-        return lead_variant_df
+        variant_object.results.set_tokyo_df(lead_variant_df)
+        return None
 
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
@@ -123,8 +124,8 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant) -> pd.DataFrame:
             tokyo_eqtl_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(tokyo_eqtl_matches_list)
     logging.info(f"Query to Tokyo eQTL file complete.")
-
-    return concat_df
+    variant_object.results.set_tokyo_df(concat_df)
+    return
 
 
 def tokyo_eqtl_to_summary_table(tokyo_eqtl_df: pd.DataFrame) -> pd.DataFrame:
