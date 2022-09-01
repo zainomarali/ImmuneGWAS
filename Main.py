@@ -2,14 +2,14 @@ from pandas import ExcelWriter
 import pandas as pd
 import logging
 
-from Variant import Variant
-from resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multitype
-from resources.eqtlgen import eqtlgen_cis_LDblock_query
-from resources.tokyo_eqtl import tokyo_eqtl_LDblock_query
-from resources.tokyo_ge import tokyo_ge_query
-from helpers.ldlink import ldtrait
-from config import output_folder
-from plotting import plot_tokyo_ge
+from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multitype
+from ImmuneGWAS.resources.eqtlgen import eqtlgen_cis_LDblock_query
+from ImmuneGWAS.resources.tokyo_eqtl import tokyo_eqtl_LDblock_query
+from ImmuneGWAS.resources.tokyo_ge import tokyo_ge_query
+from ImmuneGWAS.helpers.ldlink import ldtrait
+from ImmuneGWAS.config import output_folder
+from ImmuneGWAS.plotting import plot_tokyo_ge
 
 """
 Main script for generating a summary report for a given variant.
@@ -42,8 +42,8 @@ if __name__ == '__main__':
 
     logging.info('Started new run.')
 
-    # var = Variant("rs149143617", 1, 777870, "C", "G")
-    var = Variant("rs301816", 1, 8444998, "A", "G")
+    var = Variant("rs149143617", 1, 777870, "C", "G")
+    #var = Variant("rs301816", 1, 8444998, "A", "G")
     # var = Variant.from_rsid('rs9272363')
     print(var.get_gwas_phenotypes())
     var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
