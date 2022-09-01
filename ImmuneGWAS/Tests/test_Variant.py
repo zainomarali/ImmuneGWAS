@@ -1,5 +1,5 @@
 import pytest
-from Variant import Variant
+from ImmuneGWAS.Variant import Variant
 import pandas as pd
 
 

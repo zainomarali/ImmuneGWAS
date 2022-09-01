@@ -2,9 +2,9 @@ import subprocess
 import pandas as pd
 import logging
 
-from helpers import getpaths, dbsnp, ldlink  # Import all the helper functions
-import resources.immune_GWAS as immune_GWAS
-import config
+from ImmuneGWAS.helpers import getpaths, dbsnp, ldlink  # Import all the helper functions
+import ImmuneGWAS.resources.immune_GWAS as immune_GWAS
+import ImmuneGWAS.config as config
 
 
 class Variant:

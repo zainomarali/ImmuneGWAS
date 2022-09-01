@@ -2,9 +2,9 @@ import tabix
 import pandas as pd
 import logging
 
-import config
-from helpers.getpaths import get_paths
-import Variant
+import ImmuneGWAS.config as config
+from ImmuneGWAS.helpers.getpaths import get_paths
+import ImmuneGWAS.Variant as Variant
 
 """
 This script contains functions used to query our own Immune cell GWAS hits file.

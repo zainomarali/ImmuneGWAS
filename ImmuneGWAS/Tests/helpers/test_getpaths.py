@@ -1,4 +1,4 @@
-from helpers.getpaths import *
+from ImmuneGWAS.helpers.getpaths import *
 
 
 def test_get_paths():

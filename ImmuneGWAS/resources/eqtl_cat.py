@@ -3,10 +3,10 @@ import pandas as pd
 import tabix
 import logging
 
-from helpers.getpaths import get_paths
-from helpers.ensembl import get_gene_symbol
-from Variant import Variant
-import config
+from ImmuneGWAS.helpers.getpaths import get_paths
+from ImmuneGWAS.helpers.ensembl import get_gene_symbol
+from ImmuneGWAS.Variant import Variant
+import ImmuneGWAS.config as config
 
 
 eqtl_cat_path = get_paths(config.cbio_root)[

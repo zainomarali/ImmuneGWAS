@@ -1,8 +1,8 @@
 import tabix
 import logging
 
-from helpers.getpaths import get_paths
-import config
+from ImmuneGWAS.helpers.getpaths import get_paths
+import ImmuneGWAS.config as config
 
 """
 Access the dbSNP file in cbio3.

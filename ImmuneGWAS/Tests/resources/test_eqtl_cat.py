@@ -1,5 +1,5 @@
-from resources.eqtl_cat import *
-from Variant import Variant
+from ImmuneGWAS.resources.eqtl_cat import *
+from ImmuneGWAS.Variant import Variant
 import pytest
 
 

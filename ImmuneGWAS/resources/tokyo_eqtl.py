@@ -2,9 +2,9 @@ import pandas as pd
 import os
 import logging
 
-from helpers.getpaths import get_paths
-from Variant import Variant
-import config
+from ImmuneGWAS.helpers.getpaths import get_paths
+from ImmuneGWAS.Variant import Variant
+import ImmuneGWAS.config as config
 import tabix
 
 tokyo_eqtl_path = get_paths(config.cbio_root)['eqtl_tokyo']

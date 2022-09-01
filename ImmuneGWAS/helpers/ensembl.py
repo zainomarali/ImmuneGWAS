@@ -1,6 +1,6 @@
 import json
-from helpers.getpaths import get_paths
-import config
+from ImmuneGWAS.helpers.getpaths import get_paths
+import ImmuneGWAS.config as config
 
 alias_table_path = get_paths(config.cbio_root)['ensembl']
 

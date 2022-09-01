@@ -1,4 +1,4 @@
-from helpers.dbsnp import dbsnp_single_position_query
+from ImmuneGWAS.helpers.dbsnp import dbsnp_single_position_query
 
 
 def test_dbsnp_single_position_query():

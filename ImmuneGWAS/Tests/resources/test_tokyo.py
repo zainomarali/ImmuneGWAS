@@ -1,6 +1,6 @@
 import pytest
-from resources.tokyo_eqtl import *
-from Variant import Variant
+from ImmuneGWAS.resources.tokyo_eqtl import *
+from ImmuneGWAS.Variant import Variant
 import pandas as pd
 
 
