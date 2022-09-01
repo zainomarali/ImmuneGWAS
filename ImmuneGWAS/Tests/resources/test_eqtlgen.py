@@ -2,6 +2,7 @@ import ImmuneGWAS.Variant
 from ImmuneGWAS.resources.eqtlgen import *
 
 def test_single_eqtlgen_cis_query():
+
     assert False
 
 def test_eqtlgen_cis_LDblock_query():
