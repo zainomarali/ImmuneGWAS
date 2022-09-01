@@ -8,7 +8,6 @@ from ImmuneGWAS.helpers.ensembl import get_gene_symbol
 from ImmuneGWAS.Variant import Variant
 import ImmuneGWAS.config as config
 
-
 eqtl_cat_path = get_paths(config.cbio_root)[
                     'eqtl_cat'] + "/curated_crediblesets"  # Path to eQTL catalogue directory. Contains several files.
 
@@ -186,7 +185,6 @@ def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Varia
     logging.info("Query to eQTL catalogue finished.")
     variant_object.results.set_eqtl_cat_df(pd.concat(df_list))
     return
-
 
 
 def eqtl_catalogue_to_summary_table(eqtl_cat_df: pd.DataFrame) -> pd.DataFrame:

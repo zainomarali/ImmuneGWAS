@@ -63,7 +63,7 @@ def ldtrait(var_obj, pop='"CEU+FIN+GBR+TSI+IBS"'):
 
     logging.info("LDtrait request complete.")
 
-    var_obj.results.set_ldtrait_df(df)
+    var_obj.Results.set_ldtrait_df(df)
 
     return
 

@@ -102,7 +102,7 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
     LDblock_df = variant_object.get_LDblock()
     if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
         logging.warning("The Variant object has no LDblock attribute. Returning lead variant only.")
-        variant_object.results.set_tokyo_df(lead_variant_df)
+        variant_object.results.set_tokyo_eqtl_df(lead_variant_df)
         return None
 
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
@@ -124,7 +124,7 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
             tokyo_eqtl_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(tokyo_eqtl_matches_list)
     logging.info(f"Query to Tokyo eQTL file complete.")
-    variant_object.results.set_tokyo_df(concat_df)
+    variant_object.results.set_tokyo_eqtl_df(concat_df)
     return
 
 

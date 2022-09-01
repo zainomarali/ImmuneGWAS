@@ -46,7 +46,7 @@ def single_immuneGWAS_query(chromosome, position) -> pd.DataFrame:
 
 def immuneGWAS_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     """
-    Query our immune cell GWAS results for every SNP in the LDblock of a Variant object.
+    Query our immune cell GWAS Results for every SNP in the LDblock of a Variant object.
 
     :param variant_object: Variant
     :return: DataFrame with all the matches from Immune cell GWAS hits file for all SNPs in the LDblock of the variant

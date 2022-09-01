@@ -34,6 +34,7 @@ def test_single_eqtl_catalogue_query_type_restricted():
     assert df is not None
     assert type(df) == pd.DataFrame
 
+
 def test_eqtl_catalogue_LDblock_query_type_restricted_multitype():
     var = Variant.from_rsid('rs9272363')
     eqtl_catalogue_LDblock_query_type_restricted_multitype(var, ["ge"])

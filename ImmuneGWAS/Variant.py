@@ -7,10 +7,10 @@ import ImmuneGWAS.resources.immune_GWAS as immune_GWAS
 import ImmuneGWAS.config as config
 
 
-class results:
+class Results:
     """
     Simple container class to store the results of a variant query.
-    This class is always instantiated as a member of a variant class object.
+    This class is always instantiated as a member of a Variant class object.
     """
 
     eqtl_cat_df = None
@@ -27,8 +27,8 @@ class results:
     def set_eqtlgen_cis_df(self, df):
         self.eqtlgen_cis_df = df
 
-    def set_tokyo_df(self, df):
-        self.tokyo_df = df
+    def set_tokyo_eqtl_df(self, df):
+        self.tokyo_eqtl_df = df
 
     def set_ldtrait_df(self, df):
         self.ldtrait_df = df
@@ -61,6 +61,7 @@ class results:
         else:
             return self.ldtrait_df
 
+
 class Variant:
     def __init__(self, rsid: str, chrom: int, pos: int, EA: str, OA: str):
         """
@@ -79,7 +80,7 @@ class Variant:
         self.LDblock = None  # Initialize an empty LDblock attribute. LDblock will be a pandas dataframe later.
         self.gwas_phenotypes = []  # Initialize an empty list of gwas_phenotypes.
 
-        self.results = results()  # Initialize a results object.
+        self.results = Results()  # Initialize a Results object.
 
         logging.info(f"Variant {self.rsid} initialised.")
         self.__cross_reference_dbsnp()  # Sanity check the variant against the dbSNP database.
@@ -209,4 +210,3 @@ class Variant:
             self.LDblock = df
         else:
             self.LDblock = new_df
-
