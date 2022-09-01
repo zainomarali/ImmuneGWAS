@@ -1,7 +1,7 @@
 import logging
 
-cbio_root = "/home/antton/"  # Path to cbio3
-output_folder = "/home/antton/Desktop/ImmuneGWAS_post_output/"  # Destination for output files
+cbio_root = "/media/ludvig/"  # Path to cbio3 without the cbio3 name
+output_folder = "/media/ludvig/Project_Storage/BloodVariome/Immune_flow_GWAS/results/immuneGWAS_output/"  # Destination for output files
 
 # Initialize logging
 logging.basicConfig(filename=output_folder + "ImmuneGWAS.log",
