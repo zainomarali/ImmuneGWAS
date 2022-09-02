@@ -1,6 +1,6 @@
 import pytest
 from ImmuneGWAS.helpers.ldlink import *
-from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.variant import Variant
 
 """
 Testing for the LDLink related functions. Note that these functions are quite slow to run because they need to connect

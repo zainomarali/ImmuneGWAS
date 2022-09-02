@@ -3,7 +3,7 @@ import os
 import logging
 
 from ImmuneGWAS.helpers.getpaths import get_paths
-from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.variant import Variant
 import ImmuneGWAS.config as config
 import tabix
 

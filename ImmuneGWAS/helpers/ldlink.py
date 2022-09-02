@@ -3,7 +3,7 @@ import warnings
 import requests
 from requests.structures import CaseInsensitiveDict
 import logging
-import ImmuneGWAS.Variant as Variant
+import ImmuneGWAS.variant as Variant
 
 
 """

@@ -5,7 +5,7 @@ import logging
 
 from ImmuneGWAS.helpers.getpaths import get_paths
 from ImmuneGWAS.helpers.ensembl import get_gene_symbol
-from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.variant import Variant
 import ImmuneGWAS.config as config
 
 eqtl_cat_path = get_paths(config.cbio_root)[

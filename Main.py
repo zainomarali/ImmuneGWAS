@@ -2,7 +2,7 @@ from pandas import ExcelWriter
 import pandas as pd
 import logging
 
-from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.variant import Variant
 from ImmuneGWAS.resources.eqtl_cat import eqtl_catalogue_LDblock_query_type_restricted_multitype
 from ImmuneGWAS.resources.eqtlgen import eqtlgen_cis_LDblock_query
 from ImmuneGWAS.resources.tokyo_eqtl import tokyo_eqtl_LDblock_query

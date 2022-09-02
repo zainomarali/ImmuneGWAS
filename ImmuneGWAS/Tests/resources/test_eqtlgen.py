@@ -1,4 +1,4 @@
-import ImmuneGWAS.Variant
+import ImmuneGWAS.variant
 from ImmuneGWAS.resources.eqtlgen import *
 
 
