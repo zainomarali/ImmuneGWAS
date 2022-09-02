@@ -17,7 +17,9 @@ def ldproxy_df():
 
 @pytest.fixture(scope="module")
 def ldtrait_df():
-    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
+    # 'rs624896' has LDtrait output and is in dbSNP
+    variant_obj = Variant("rs624896", 5, 114520357, "A", "G")  # Create new Variant object
+    ldtrait(variant_obj)  # Update the .results object
     return variant_obj.results.ldtrait()  # This is a pandas dataframe
 
 
@@ -48,4 +50,12 @@ def test_ldtrait_columns(ldtrait_df) -> None:
     """
     assert "R2" in ldtrait_df.columns
 
-# TODO: Add tests for when the variant has not LDblock or output is faulty.
+
+def test_ldtrait_missing_variant():
+    """
+    Test that the ldtrait function raises an error when the variant is not found in the LDtrait database.
+    """
+    with pytest.raises(ValueError):
+        variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
+        ldtrait(variant_obj)
+        variant_obj.results.ldtrait()
