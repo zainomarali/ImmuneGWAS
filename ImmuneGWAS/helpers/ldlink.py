@@ -22,6 +22,7 @@ Downstream processing needed:
 
 warnings.filterwarnings('ignore')
 
+
 def ldtrait(var_obj, pop='"CEU+FIN+GBR+TSI+IBS"'):
     """
     Access LDtrait and get all the available traits for the requested SNP.
