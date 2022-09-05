@@ -94,8 +94,6 @@ def eqtlgen_trans_LDblock_query(variant_object: Variant):
 
     :param variant_object: Variant object
     """
-    lead_variant_df = single_eqtlgen_trans_query(variant_object.get_chrom(), variant_object.get_pos())
-    eqtlgen_trans_matches_list = [lead_variant_df]  # List of dataframes, used to concat all the dfs together.
     LDblock_df = variant_object.get_LDblock()
     variant_positions_list_of_lists = []  # [[chromosome, position], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
@@ -103,6 +101,8 @@ def eqtlgen_trans_LDblock_query(variant_object: Variant):
             ['chrom', 'hg38_pos']].values.tolist()  # List of lists with [chr, position] for each variant
     else:  # TODO: This check could be better. If the columns doesn't exist probably means dataframe is empty.
         logging.warning("No keys 'chrom', 'hg38_pos' in LDblock_df.columns. Returning lead variant only.")
+
+    eqtlgen_trans_matches_list = []  # List of dataframes, used to concat all the dfs together.
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:
             # DataFrame with all the matches from eQTL cat studies for the variant at the position (list[0], list[1])
