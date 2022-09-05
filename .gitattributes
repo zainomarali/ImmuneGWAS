@@ -1,1 +1,6 @@
 ImmuneGWAS/config.py merge=ours
+
+
+$ git config --global merge.ours.driver true
+
+
