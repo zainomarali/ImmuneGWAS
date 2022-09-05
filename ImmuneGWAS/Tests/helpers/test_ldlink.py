@@ -1,6 +1,6 @@
 import pytest
 from ImmuneGWAS.helpers.ldlink import *
-from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.variant import Variant
 
 """
 Testing for the LDLink related functions. Note that these functions are quite slow to run because they need to connect
@@ -17,7 +17,9 @@ def ldproxy_df():
 
 @pytest.fixture(scope="module")
 def ldtrait_df():
-    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
+    # 'rs624896' has LDtrait output and is in dbSNP
+    variant_obj = Variant("rs624896", 5, 114520357, "A", "G")  # Create new Variant object
+    ldtrait(variant_obj)  # Update the .results object
     return variant_obj.results.ldtrait()  # This is a pandas dataframe
 
 
@@ -48,4 +50,11 @@ def test_ldtrait_columns(ldtrait_df) -> None:
     """
     assert "R2" in ldtrait_df.columns
 
-# TODO: Add tests for when the variant has not LDblock or output is faulty.
+
+def test_ldtrait_missing_variant():
+    """
+    Test that the ldtrait function returns an empty dataframe when the variant is not found in the LDtrait database.
+    """
+    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")  # This variant should not have any matches in LDtrait
+    ldtrait(variant_obj)
+    assert variant_obj.results.ldtrait().empty

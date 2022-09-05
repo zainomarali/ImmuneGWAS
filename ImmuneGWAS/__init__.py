@@ -1,3 +1,3 @@
 import ImmuneGWAS.resources
 import ImmuneGWAS.helpers
-import ImmuneGWAS.Variant
+import ImmuneGWAS.variant

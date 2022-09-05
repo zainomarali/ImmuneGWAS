@@ -3,7 +3,7 @@ import warnings
 import requests
 from requests.structures import CaseInsensitiveDict
 import logging
-import ImmuneGWAS.Variant as Variant
+import ImmuneGWAS.variant as Variant
 
 
 """
@@ -22,11 +22,12 @@ Downstream processing needed:
 
 warnings.filterwarnings('ignore')
 
+
 def ldtrait(var_obj, pop='"CEU+FIN+GBR+TSI+IBS"'):
     """
     Access LDtrait and get all the available traits for the requested SNP.
 
-    :param rsid: rsid you are interested in
+    :param var_obj: variant object
     :param pop: Populations to use in the LDProxy query. Default is European.
     """
 
@@ -61,11 +62,14 @@ def ldtrait(var_obj, pop='"CEU+FIN+GBR+TSI+IBS"'):
         if len(row) == len(df.columns):
             df.loc[i] = (inputlist[i].split('\t'))
 
-    logging.info("LDtrait request complete.")
+    if df.empty:
+        logging.warning(f"LDtrait request complete. LDtrait returned empty dataframe for {rsid}")
+    else:
+        logging.info("LDtrait request complete. Shape of df: " + str(df.shape))
 
-    var_obj.Results.set_ldtrait_df(df)
+    var_obj.results.set_ldtrait_df(df)
 
-    return
+    return df
 
 
 def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
@@ -75,6 +79,7 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
     :param rsid: rsid you are interested in
     :param pop: Populations to use in the LDProxy query. Default is European.
     :param threshold: R2 threshold. 0.8 by default
+    :return: pandas dataframe with all the SNPs in LD with the input SNP.
     """
     logging.info(f"Accessing LDproxy API for {rsid}")
 

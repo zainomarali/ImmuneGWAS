@@ -4,7 +4,7 @@ import logging
 
 import ImmuneGWAS.config as config
 from ImmuneGWAS.helpers.getpaths import get_paths
-import ImmuneGWAS.Variant as Variant
+import ImmuneGWAS.variant as Variant
 
 """
 This script contains functions used to query our own Immune cell GWAS hits file.
