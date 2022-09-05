@@ -3,3 +3,5 @@
 config.py
 ImmuneGWAS/config.py
 ImmuneGWAS.egg-info/
+.pytest_cache
+.ipynb_checkpoints

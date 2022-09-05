@@ -17,14 +17,14 @@ def test_from_rsid():
     Test the alternate 'from_rsid' constructor. This should work as well as specifying the data manually, provided we
     have the variant in our sumstats file.
     """
-    input_rsid = "rs7292711"
+    input_rsid = "rs10982456"
     var = Variant.from_rsid(input_rsid)
 
     assert var.get_rsid() == input_rsid
-    assert var.get_chrom() == 22
-    assert var.get_pos() == 22716968
-    assert var.get_EA() == "A"
-    assert var.get_OA() == "G"
+    assert var.get_chrom() == 9
+    assert var.get_pos() == 114928478
+    assert var.get_EA() == "C"
+    assert var.get_OA() == "T"
 
 
 def test_from_rsid_not_in_sumstats():

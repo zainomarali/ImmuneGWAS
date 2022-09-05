@@ -42,14 +42,19 @@ if __name__ == '__main__':
 
     logging.info('Started new run.')
 
-    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
-    ldtrait(variant_obj)
-    variant_obj.results.ldtrait()
+    variant_obj = Variant("rs1354034", 3, 56815721, "T", "C")
 
-
+    #variant_obj = Variant.from_rsid("rs10982456")
+    #ldtrait(variant_obj)
+    #variant_obj.results.ldtrait()
+    eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_obj, ['ge', 'microarray'])
+    df = variant_obj.results.eqtl_cat()
+    print(df)
+    #print(df.drop_duplicates())
+    df.to_csv("/home/antton/Desktop/eqtlcat.csv")
     #var = Variant("rs149143617", 1, 777870, "C", "G")
     #var = Variant("rs301816", 1, 8444998, "A", "G")
-    # var = Variant.from_rsid('rs9272363')
+    #var = Variant.from_rsid('rs9272363')
     #print(var.get_gwas_phenotypes())
     #var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
     #generate_full_excel_file(var, output_folder+'01-FullReport')

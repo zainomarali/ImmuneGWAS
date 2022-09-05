@@ -96,6 +96,7 @@ class Variant:
 
         :param rsid: The rsID of the variant.
         """
+        logging.info(f"Alternate constructor called for variant {rsid}. Checking summary stats file for position.")
         path = getpaths.get_sumstats_path(config.cbio_root)
         process = subprocess.Popen(["grep", "-w", rsid, path], stdout=subprocess.PIPE)  # grep the rsid from the file
         sp_output, sp_error = process.communicate()  # Get the output of the process, both stdout and stderr

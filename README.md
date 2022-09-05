@@ -19,8 +19,9 @@ The package can then be imported as
 
 ### Configuration
 
-After you have installed the package, make sure to update the configuration file `ImmuneGWAS/config.py` with the correct
-paths to cbio3 and the desired output folder.
+After you have installed the package, you will need to update the configuration file. Copy the
+`ImmuneGWAS/config.dist.py` file and rename it to `ImmuneGWAS/config.py`. Change the default paths in the file to
+the correct paths to cbio3 and the desired output folder.
 
 ## Usage
 
