@@ -46,4 +46,4 @@ def get_sumstats_path(root):
     Returns the path to the combined Immune cell GWAS output summary statistics file.
     TODO: this file should be updated.
     """
-    return root + "cbio3/projects/antton/Immune_cell_GWAS/output/GWAS/combined_output/combined_hits_only_hg38.txt"
+    return root + "cbio3/projects/antton/Immune_cell_GWAS/data/hits_only_table_hg38.txt"

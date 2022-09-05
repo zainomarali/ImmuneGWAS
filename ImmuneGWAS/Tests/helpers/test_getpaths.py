@@ -20,5 +20,5 @@ def test_get_paths():
 
 
 def test_get_sumstats_path():
-    assert get_sumstats_path("/path/to/dir/") == "/path/to/dir/cbio3/projects/antton/Immune_cell_GWAS/output/GWAS" \
-                                                 "/combined_output/combined_hits_only_hg38.txt"
+    assert get_sumstats_path("/path/to/dir/") == "/path/to/dir/cbio3/projects/antton/Immune_cell_GWAS/data" \
+                                                 "/hits_only_table_hg38.txt"
