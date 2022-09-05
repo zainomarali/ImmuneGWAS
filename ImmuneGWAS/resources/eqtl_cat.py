@@ -105,6 +105,10 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
         if EA:  # In eQTL-cat ALT should always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/)
             if EA == concatenated_df["alt"].iloc[0]:
                 pass
+            elif EA == concatenated_df["ref"].iloc[0]:
+                logging.info(f"LDblock EA {EA} corresponds to eQTLcat OA {concatenated_df['OA'].iloc[0]}. "
+                             f"Sign of the z value flipped.")
+                concatenated_df.z = concatenated_df.z * -1
             elif concatenated_df["alt"].iloc[0][0] == concatenated_df["ref"].iloc[0][0]:  # Deletion/addition case
                 # LDlink represents -/T while eQTL-cat does G/GT
                 if EA == concatenated_df["alt"].iloc[0][1:]:  # Addition:
