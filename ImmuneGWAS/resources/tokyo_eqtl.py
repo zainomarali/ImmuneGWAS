@@ -94,11 +94,6 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
     """
     logging.info(f"Querying Tokyo eQTL file for full LD block of Variant {variant_object.rsid}")
 
-    # Lookup for the user-inputted variant, a.k.a. the lead variant, on its own
-    lead_variant_df = single_tokyo_eqtl_query(variant_object.get_chrom(), variant_object.get_pos(),
-                                              EA=variant_object.get_EA())
-    tokyo_eqtl_matches_list = [lead_variant_df]  # List of dfs, one per variant in LD block, used for concatenation
-
     LDblock_df = variant_object.get_LDblock()
     if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
         logging.warning("The Variant object has no LDblock attribute. Returning lead variant only.")
@@ -112,6 +107,8 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
              'RS_Number']].values.tolist()  # List of lists with [chr, position] for each variant
     else:  # TODO: This check could be more thorough.
         raise ValueError("LDblock dataframe has no 'chrom' or 'hg38_pos' columns.")
+
+    tokyo_eqtl_matches_list = []  # List of dfs, one per variant in LD block, used for concatenation
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:  # Iterate over the LDblock, make a query for each SNP
             # Create a DataFrame with all the matches for the variant at the position (list[0], list[1])
