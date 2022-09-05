@@ -106,9 +106,9 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
             if EA == concatenated_df["alt"].iloc[0]:
                 pass
             elif EA == concatenated_df["ref"].iloc[0]:
-                logging.info(f"LDblock EA {EA} corresponds to eQTLcat OA {concatenated_df['OA'].iloc[0]}. "
+                logging.info(f"LDblock EA {EA} corresponds to eQTLcat OA {concatenated_df['ref'].iloc[0]}. "
                              f"Sign of the z value flipped.")
-                concatenated_df.z = concatenated_df.z * -1
+                concatenated_df.z = float(concatenated_df.z) * -1
             elif concatenated_df["alt"].iloc[0][0] == concatenated_df["ref"].iloc[0][0]:  # Deletion/addition case
                 # LDlink represents -/T while eQTL-cat does G/GT
                 if EA == concatenated_df["alt"].iloc[0][1:]:  # Addition:
@@ -140,9 +140,7 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
     :param study_type_key: key for the study type. Options are 'ge', 'exon', 'tx', 'txrev' and 'microarray'
     :return: DataFrame with all the matches from the eQTL catalogue for every SNP in the LDblock
     """
-    lead_variant_df = single_eqtl_catalogue_query_type_restricted(variant_object.get_chrom(), variant_object.get_pos(),
-                                                                  study_type_key)
-    eqtl_cat_matches_list = [lead_variant_df]  # List of dataframes, used to concat all the dfs together.
+
     LDblock_df = variant_object.get_LDblock()
     variant_positions_list_of_lists = []  # [[chromosome, position], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
@@ -150,6 +148,8 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
             ['chrom', 'hg38_pos', 'EA']].values.tolist()  # List of lists with [chr, position] for each variant
     else:  # TODO: This check could be better. If the columns doesn't exist probably means dataframe is empty.
         logging.warning("No keys 'chrom', 'hg38_pos' in LDblock_df.columns. Returning lead variant only.")
+
+    eqtl_cat_matches_list = []  # List of dataframes
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:
             # DataFrame with all the matches from eQTL cat studies for the variant at the position (list[0], list[1])
