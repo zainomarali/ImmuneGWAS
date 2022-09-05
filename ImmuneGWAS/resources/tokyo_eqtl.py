@@ -3,7 +3,7 @@ import os
 import logging
 
 from ImmuneGWAS.helpers.getpaths import get_paths
-from ImmuneGWAS.Variant import Variant
+from ImmuneGWAS.variant import Variant
 import ImmuneGWAS.config as config
 import tabix
 
@@ -103,7 +103,7 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
     if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
         logging.warning("The Variant object has no LDblock attribute. Returning lead variant only.")
         variant_object.results.set_tokyo_eqtl_df(lead_variant_df)
-        return None
+        return
 
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
