@@ -173,14 +173,17 @@ def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Varia
     :param input_study_list: list of study types to query. Should be a list containing a slice of the list
     ['ge', 'exon', 'tx', 'txrev' and 'microarray']. If none is specified, all study types are queried.
     """
-    logging.info(f"Querying eQTL catalogue files for full LD block of Variant {variant_object.rsid}, for study types: "
-                 f"{', '.join(input_study_list)}")
-
     df_list = []
+
     if input_study_list is None:
         study_list = ['ge', 'exon', 'tx', 'txrev', 'microarray']
     else:
         study_list = list(set(input_study_list))  # Remove duplicates just in case
+
+    logging.info(f"Querying eQTL catalogue files for full LD block of Variant {variant_object.rsid}, for study types: "
+                 f"{', '.join(study_list)}")
+
+    
     for study_type_key in study_list:
         if study_type_key not in ['ge', 'exon', 'tx', 'txrev', 'microarray']:
             raise ValueError("Invalid study type specified. study_type_key must be one of 'ge', 'exon', 'tx', "
