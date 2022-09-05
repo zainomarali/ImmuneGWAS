@@ -53,9 +53,8 @@ def test_ldtrait_columns(ldtrait_df) -> None:
 
 def test_ldtrait_missing_variant():
     """
-    Test that the ldtrait function raises an error when the variant is not found in the LDtrait database.
+    Test that the ldtrait function returns an empty dataframe when the variant is not found in the LDtrait database.
     """
-    with pytest.raises(ValueError):
-        variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
-        ldtrait(variant_obj)
-        variant_obj.results.ldtrait()
+    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")  # This variant should not have any matches in LDtrait
+    ldtrait(variant_obj)
+    assert variant_obj.results.ldtrait().empty

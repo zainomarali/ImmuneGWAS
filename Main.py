@@ -42,11 +42,16 @@ if __name__ == '__main__':
 
     logging.info('Started new run.')
 
-    var = Variant("rs149143617", 1, 777870, "C", "G")
+    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
+    ldtrait(variant_obj)
+    variant_obj.results.ldtrait()
+
+
+    #var = Variant("rs149143617", 1, 777870, "C", "G")
     #var = Variant("rs301816", 1, 8444998, "A", "G")
     # var = Variant.from_rsid('rs9272363')
-    print(var.get_gwas_phenotypes())
-    var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
-    generate_full_excel_file(var, output_folder+'01-FullReport')
-    print(plot_tokyo_ge(["ENSG00000000419", "ENSG00000004776", "ENSG00000284725", "ENSG00000284747"]))
+    #print(var.get_gwas_phenotypes())
+    #var.get_LDblock().to_csv(output_folder+'00-LDblock.csv')
+    #generate_full_excel_file(var, output_folder+'01-FullReport')
+    #print(plot_tokyo_ge(["ENSG00000000419", "ENSG00000004776", "ENSG00000284725", "ENSG00000284747"]))
     logging.info('Finished run.')

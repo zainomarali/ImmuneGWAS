@@ -62,7 +62,10 @@ def ldtrait(var_obj, pop='"CEU+FIN+GBR+TSI+IBS"'):
         if len(row) == len(df.columns):
             df.loc[i] = (inputlist[i].split('\t'))
 
-    logging.info("LDtrait request complete." + str(df.shape))
+    if df.empty:
+        logging.warning(f"LDtrait request complete. LDtrait returned empty dataframe for {rsid}")
+    else:
+        logging.info("LDtrait request complete. Shape of df: " + str(df.shape))
 
     var_obj.results.set_ldtrait_df(df)
 
