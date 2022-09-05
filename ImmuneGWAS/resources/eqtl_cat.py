@@ -3,11 +3,10 @@ import pandas as pd
 import tabix
 import logging
 
-from helpers.getpaths import get_paths
-from helpers.ensembl import get_gene_symbol
-from Variant import Variant
-import config
-
+from ImmuneGWAS.helpers.getpaths import get_paths
+from ImmuneGWAS.helpers.ensembl import get_gene_symbol
+from ImmuneGWAS.Variant import Variant
+import ImmuneGWAS.config as config
 
 eqtl_cat_path = get_paths(config.cbio_root)[
                     'eqtl_cat'] + "/curated_crediblesets"  # Path to eQTL catalogue directory. Contains several files.
@@ -50,6 +49,10 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
     located at chromosome:position.
     This function is called by the function  :py:func:`eqtl_catalogue_LDblock_query_type_restricted` once for every
     variant in the LD block of a Variant object.
+    If the EA parameter is specified, the function will check that the given effect allele (EA) is the same as the
+    eQTL catalogue ALT allele, and it will raise an exception if not. By design, In the eQTL catalogue data ALT should
+    always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/), but we can still run into issues with
+    multi allelic variants, for example.
 
     :param chromosome: chromosome number
     :param position: position on the chromosome
@@ -94,10 +97,12 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
             logging.exception("'tabix.TabixError' exception raised. Something went wrong when trying to access the file"
                               " ", eqtl_cat_file, ". Skipping this study.")
             continue
-    if list_of_study_match_dfs:
+
+    if list_of_study_match_dfs:  # If we have a non-empty list of dataframes
         concatenated_df = pd.concat(list_of_study_match_dfs)
-        # EA check!:
-        if EA:  # In eQTLcat ALT should always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/)
+
+        # If EA check was requested:
+        if EA:  # In eQTL-cat ALT should always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/)
             if EA == concatenated_df["alt"].iloc[0]:
                 pass
             elif concatenated_df["alt"].iloc[0][0] == concatenated_df["ref"].iloc[0][0]:  # Deletion/addition case
@@ -107,7 +112,7 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
                 elif EA == '-' and concatenated_df["alt"].iloc[0] == concatenated_df["ref"].iloc[0][0]:  # Deletion
                     pass  # We check EA is '-' and compare G(alt) and GT[0](ref)
                 else:
-                    raise ValueError("Something went wrong when checking EA harmony with INSERTION/DELETION.\n"
+                    raise ValueError("Something went wrong when checking EA harmony with an INSERTION/DELETION SNP.\n"
                                      f"Variant located at: {chromosome}:{position} (hg38)\n"
                                      f"LDblock EA = {EA} ,\teQTL catalogue ALT = {concatenated_df['alt'].iloc[0]} ,\t"
                                      f"LDblock ref = {concatenated_df['ref'].iloc[0]}")
@@ -157,7 +162,7 @@ def eqtl_catalogue_LDblock_query_type_restricted(variant_object: Variant, study_
 
 
 def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Variant,
-                                                           input_study_list: list = None) -> pd.DataFrame:
+                                                           input_study_list: list = None):
     """
     Go through the eQTL catalogue studies of all types and return the eQTLs that are significant for every variant.
     :param variant_object: Variant object
@@ -178,7 +183,8 @@ def eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_object: Varia
                              "'txrev' or 'microarray'")
         df_list.append(eqtl_catalogue_LDblock_query_type_restricted(variant_object, study_type_key))
     logging.info("Query to eQTL catalogue finished.")
-    return pd.concat(df_list)
+    variant_object.results.set_eqtl_cat_df(pd.concat(df_list))
+    return
 
 
 def eqtl_catalogue_to_summary_table(eqtl_cat_df: pd.DataFrame) -> pd.DataFrame:

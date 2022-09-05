@@ -1,6 +1,6 @@
 import seaborn as sns
 import matplotlib.pyplot as plt
-from resources.tokyo_ge import tokyo_ge_query
+from ImmuneGWAS.resources.tokyo_ge import tokyo_ge_query
 
 
 def plot_tokyo_ge(gene_id_list):

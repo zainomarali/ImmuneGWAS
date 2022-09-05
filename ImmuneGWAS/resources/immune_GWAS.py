@@ -2,9 +2,9 @@ import tabix
 import pandas as pd
 import logging
 
-import config
-from helpers.getpaths import get_paths
-import Variant
+import ImmuneGWAS.config as config
+from ImmuneGWAS.helpers.getpaths import get_paths
+import ImmuneGWAS.Variant as Variant
 
 """
 This script contains functions used to query our own Immune cell GWAS hits file.
@@ -46,7 +46,7 @@ def single_immuneGWAS_query(chromosome, position) -> pd.DataFrame:
 
 def immuneGWAS_LDblock_query(variant_object: Variant) -> pd.DataFrame:
     """
-    Query our immune cell GWAS results for every SNP in the LDblock of a Variant object.
+    Query our immune cell GWAS Results for every SNP in the LDblock of a Variant object.
 
     :param variant_object: Variant
     :return: DataFrame with all the matches from Immune cell GWAS hits file for all SNPs in the LDblock of the variant
@@ -68,5 +68,5 @@ def immuneGWAS_LDblock_query(variant_object: Variant) -> pd.DataFrame:
             immuneGWAS_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(immuneGWAS_matches_list)
     logging.info(f"Query to immuneGWAS output file complete.")
-    
+
     return concat_df

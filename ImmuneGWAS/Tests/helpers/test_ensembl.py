@@ -1,4 +1,4 @@
-from helpers.ensembl import *
+from ImmuneGWAS.helpers.ensembl import *
 
 
 def test_get_gene_symbol():

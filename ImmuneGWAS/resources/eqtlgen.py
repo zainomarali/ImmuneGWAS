@@ -1,9 +1,9 @@
 import pandas as pd
 import logging
 
-from helpers.getpaths import get_paths
-from Variant import Variant
-import config
+from ImmuneGWAS.helpers.getpaths import get_paths
+from ImmuneGWAS.Variant import Variant
+import ImmuneGWAS.config as config
 import tabix
 
 eqtlgen_cis_path = get_paths(config.cbio_root)['eqtlgen_cis']
@@ -58,7 +58,8 @@ def eqtlgen_cis_LDblock_query(variant_object: Variant):
             eqtlgen_cis_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(eqtlgen_cis_matches_list)
     logging.info(f"Query to eQTLgen cis-eQTL file complete.")
-    return concat_df
+    variant_object.results.set_eqtlgen_cis_df(concat_df)
+    return
 
 # TODO: All eQTLgen Trans-eQTLs functions are untested!
 

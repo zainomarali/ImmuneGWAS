@@ -1,5 +1,6 @@
 import pytest
-from helpers.ldlink import *
+from ImmuneGWAS.helpers.ldlink import *
+from ImmuneGWAS.Variant import Variant
 
 """
 Testing for the LDLink related functions. Note that these functions are quite slow to run because they need to connect
@@ -9,14 +10,15 @@ and a reason for the tests failing could be the the LDlink database itself has c
 """
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def ldproxy_df():
     return ldproxy('rs16886165')
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def ldtrait_df():
-    return ldtrait('rs16886165')
+    variant_obj = Variant("rs149143617", 1, 777870, "C", "G")
+    return variant_obj.results.ldtrait()  # This is a pandas dataframe
 
 
 def test_ldproxy(ldproxy_df) -> None:
@@ -45,6 +47,5 @@ def test_ldtrait_columns(ldtrait_df) -> None:
     Test that the dataframe has the necessary columns.
     """
     assert "R2" in ldtrait_df.columns
-
 
 # TODO: Add tests for when the variant has not LDblock or output is faulty.

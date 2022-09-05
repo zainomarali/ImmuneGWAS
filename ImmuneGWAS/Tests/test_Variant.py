@@ -1,5 +1,5 @@
 import pytest
-from Variant import Variant
+from ImmuneGWAS.Variant import Variant
 import pandas as pd
 
 
@@ -36,7 +36,7 @@ def test_from_rsid_not_in_sumstats():
         Variant.from_rsid("rs943")
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def variant_object():
     """
     Create a variant object for testing all the getters.
@@ -86,4 +86,4 @@ def test_set_ldblock_not_found():
     If the rsID is not included in LDlink, an exception should be raised.
     """
     with pytest.raises(ValueError):
-        Variant.from_rsid("rs1308164722")
+        Variant.from_rsid("rs1308164722")  # rsID not in LDlink
