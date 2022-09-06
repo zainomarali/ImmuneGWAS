@@ -108,7 +108,7 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
             elif EA == concatenated_df["ref"].iloc[0]:
                 logging.info(f"LDblock EA {EA} corresponds to eQTLcat OA {concatenated_df['ref'].iloc[0]}. "
                              f"Sign of the z value flipped.")
-                concatenated_df.z = float(concatenated_df.z) * -1
+                concatenated_df.z = concatenated_df.z.astype(float) * -1
             elif concatenated_df["alt"].iloc[0][0] == concatenated_df["ref"].iloc[0][0]:  # Deletion/addition case
                 # LDlink represents -/T while eQTL-cat does G/GT
                 if EA == concatenated_df["alt"].iloc[0][1:]:  # Addition:
