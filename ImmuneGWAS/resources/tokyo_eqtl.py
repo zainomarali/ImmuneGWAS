@@ -76,7 +76,7 @@ def single_tokyo_eqtl_query(chromosome, position, EA=None) -> pd.DataFrame:
                              f"Sign of the beta flipped.")
                 concatenated_df.Forward_slope = concatenated_df.Forward_slope * -1
             else:
-                raise ValueError(f"ERROR: LDblock EA {EA} does not correspond to either Tokyo EA"
+                raise ValueError(f"ERROR: LDblock EA {EA} does not correspond to either Tokyo EA "
                                  f"{concatenated_df['EA'].iloc[0]} or Tokyo OA {concatenated_df['OA'].iloc[0]}")
         return concatenated_df  # Results from every cell type for a single SNP
     else:
@@ -112,11 +112,15 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
     if variant_positions_list_of_lists:
         for variant_pos_list in variant_positions_list_of_lists:  # Iterate over the LDblock, make a query for each SNP
             # Create a DataFrame with all the matches for the variant at the position (list[0], list[1])
-            variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1], EA=variant_pos_list[2])
-            if not variant_df.empty:
-                # Companion message for message coming from single_tokyo_eqtl_query.
-                logging.info(f" ...for variant {variant_pos_list[3]} at position {variant_pos_list[1]} on chromosome "
-                             f"{variant_pos_list[0]}:")
+            try:
+                variant_df = single_tokyo_eqtl_query(variant_pos_list[0], variant_pos_list[1], EA=variant_pos_list[2])
+                if not variant_df.empty:
+                    # Companion message for message coming from single_tokyo_eqtl_query.
+                    logging.info(f" ...for variant {variant_pos_list[3]} at position {variant_pos_list[1]} on chromosome "
+                                 f"{variant_pos_list[0]}:")
+            except ValueError as e:
+                logging.exception(e)
+                continue
 
             tokyo_eqtl_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(tokyo_eqtl_matches_list)
