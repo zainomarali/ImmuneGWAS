@@ -74,7 +74,7 @@ def single_tokyo_eqtl_query(chromosome, position, EA=None) -> pd.DataFrame:
             elif EA == concatenated_df["OA"].iloc[0]:
                 logging.info(f"LDblock EA {EA} corresponds to Tokyo OA {concatenated_df['OA'].iloc[0]}. "
                              f"Sign of the beta flipped.")
-                concatenated_df.Forward_slope = concatenated_df.Forward_slope * -1
+                concatenated_df.Forward_slope = concatenated_df.Forward_slope.astype(float) * -1
             else:
                 raise ValueError(f"ERROR: LDblock EA {EA} does not correspond to either Tokyo EA "
                                  f"{concatenated_df['EA'].iloc[0]} or Tokyo OA {concatenated_df['OA'].iloc[0]}")
