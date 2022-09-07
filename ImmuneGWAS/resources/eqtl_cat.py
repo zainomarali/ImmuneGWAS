@@ -65,6 +65,7 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
     if study_type_key not in ['ge', 'exon', 'tx', 'txrev', 'microarray']:
         raise ValueError("Invalid study type specified. study_type_key must be one of: 'ge', 'exon', 'tx', 'txrev' or "
                          "'microarray'")
+    logging.info(f"Querying variant at {chromosome}:{position} for study type {study_type_key}")
     studies_of_requested_type_list = get_studies_of_type(study_type_key=study_type_key)
     list_of_study_match_dfs = []  # List of dataframes, one for each study that contains the variant
     for i, study in enumerate(studies_of_requested_type_list):

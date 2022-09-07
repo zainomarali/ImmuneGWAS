@@ -50,7 +50,7 @@ class Results:
             return None
         else:
             return self.eqtlgen_cis_df
-        
+
     def eqtlgen_trans(self):
         if self.eqtlgen_trans_df is None:
             logging.info('No eqtlgen_trans dataframe found.')
@@ -76,7 +76,9 @@ class Results:
 class Variant:
     def __init__(self, rsid: str, chrom: int, pos: int, EA: str, OA: str):
         """
-        Initialise a new Variant object.
+        Variant object. Contains information about rsid, position, alleles, LD block, and GWAS hits for a variant.
+        It can be created from a single rsID by using the Variant.from_rsid() method.
+
         :param rsid: The rsID of the variant.
         :param chrom: The chromosome number of the variant.
         :param pos: The position of the variant.

@@ -20,6 +20,7 @@ def single_eqtlgen_cis_query(chromosome: int, position: int, EA: str = None) -> 
     :param EA: Effect allele. If given, it checks that the AssessedAllele in the eqtlgen cis-eQTL file is the same as EA
     :return: DataFrame with all the matches from eQTLgen for the variant at the position (chromosome, position)
     """
+    logging.info(f"Querying variant at {chromosome}:{position}")
     try:
         eqtlgen_tabix_file = tabix.open(eqtlgen_cis_path)
         # Make the tabix query. Returns iterator with all matches from tabix lookup.
@@ -40,6 +41,8 @@ def single_eqtlgen_cis_query(chromosome: int, position: int, EA: str = None) -> 
         if EA == df.iloc[0]['AssessedAllele']:
             pass
         elif EA == df.iloc[0]['OtherAllele']:  # If it matches the OtherAllele instead, we flip the Zscore
+            logging.info(f"LDblock EA {EA} corresponds to eQTLGen OtherAllele {df.iloc[0]['OtherAllele']}. "
+                         f"Sign of the Zscore value flipped.")
             df['Zscore'] = -(df['Zscore'].astype(float))
         else:
             raise ValueError(f"ERROR: LDblock EA {EA} does not correspond to either eQTLGen AssessedAllele "
@@ -82,6 +85,7 @@ def single_eqtlgen_trans_query(chromosome: int, position: int, EA: str = None) -
     :param EA: Effect Allele to check for.
     :return: DataFrame with all matches for given position
     """
+    logging.info(f"Querying variant at {chromosome}:{position}")
     try:
         eqtlgen_tabix_file = tabix.open(eqtlgen_trans_path)
         # Make the query. Returns iterator with all matches from tabix lookup.
@@ -94,17 +98,20 @@ def single_eqtlgen_trans_query(chromosome: int, position: int, EA: str = None) -
             df = pd.DataFrame(match_list, columns=headers)  # DataFrame with all the matches
         else:
             df = pd.DataFrame()
+            logging.info("No matches found")
     except tabix.TabixError:
         logging.exception(f"'tabix.TabixError' raised for tabix lookup for position {chromosome}:{position}-{position}"
                           f"in file {eqtlgen_cis_path}")
         df = pd.DataFrame()
-    if EA:
+    if EA and not df.empty:  # EA check
         if EA == df.iloc[0]['AssessedAllele']:
             pass
         elif EA == df.iloc[0]['OtherAllele']:
+            logging.info(f"LDblock EA {EA} corresponds to eQTLGen (trans) OtherAllele {df.iloc[0]['OtherAllele']}. "
+                         f"Sign of the Zscore value flipped.")
             df['Zscore'] = -(df['Zscore'].astype(float))
         else:
-            raise ValueError(f"ERROR: LDblock EA {EA} does not correspond to either eQTLGen AssessedAllele "
+            raise ValueError(f"LDblock EA {EA} does not correspond to either eQTLGen AssessedAllele "
                              f"{df.iloc[0]['AssessedAllele']} or OtherAllele {df.iloc[0]['OtherAllele']}")
 
     return df
@@ -117,6 +124,7 @@ def eqtlgen_trans_LDblock_query(variant_object: Variant):
 
     :param variant_object: Variant object
     """
+    logging.info(f"Querying eQTLgen trans-eQTL file for full LD block of Variant {variant_object.rsid}")
     LDblock_df = variant_object.get_LDblock()
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later
     if 'chrom' in LDblock_df.columns.to_list() and 'hg38_pos' in LDblock_df.columns.to_list():
@@ -133,6 +141,8 @@ def eqtlgen_trans_LDblock_query(variant_object: Variant):
             eqtlgen_trans_matches_list.append(variant_df)  # Add the dataframe to the list of dataframes
     concat_df = pd.concat(eqtlgen_trans_matches_list)
     variant_object.results.set_eqtlgen_trans_df(concat_df)
+    logging.info(f"Query to eQTLgen trans-eQTL file complete.")
+
     return
 
 
