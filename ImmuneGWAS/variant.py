@@ -125,6 +125,12 @@ class Variant:
 
         return cls(rsid, chrom, pos, EA, OA)
 
+    @classmethod
+    def from_dbsnp(cls, rsid: str):
+        """Alternate constructor that looks up dbsnp instead of the sumstats file.
+        WARNING: This is not implemented yet. TODO: Implement this."""
+        pass
+
     def __cross_reference_dbsnp(self) -> None:
         """
         Cross-reference the variant with the dbSNP database to ensure the rsID-position assignment is correct.

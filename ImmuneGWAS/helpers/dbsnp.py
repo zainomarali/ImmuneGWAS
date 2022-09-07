@@ -1,3 +1,4 @@
+import pandas as pd
 import tabix
 import logging
 
@@ -38,3 +39,17 @@ def dbsnp_single_position_query(SNP_chr: int, SNP_pos: int):
         return None
     else:
         return match_list  # This will be a list with a variable number of elements.
+
+
+def replace_rsid_column_with_dbsnp(df: pd.DataFrame, rsid_col_name: str, chr_col_name: str, pos_col_name: str) -> pd.DataFrame:
+    """
+    For a df, replace its column with rsIDs with a new column obtained by getting the rsid listed dbsnp for that
+    position.
+
+    :param df: dataframe with a column with rsIDs, a column with chromosome numbers, and a column with positions
+    :param rsid_col_name: name of the column with rsIDs
+    :param chr_col_name: name of the column with chromosome numbers
+    :param pos_col_name: name of the column with positions
+    :return: dataframe with the same columns as the input, but with a new column with rsIDs obtained from dbsnp
+    """
+    pass
