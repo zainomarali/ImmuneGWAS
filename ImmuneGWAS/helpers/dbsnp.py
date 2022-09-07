@@ -71,8 +71,8 @@ def replace_rsid_column_with_dbsnp(df: pd.DataFrame,
     """
     if not single_position_column:
         # The indexes [0][2] take the position of the rsID in the list-of-lists returned by dbsnp_single_position_query
-        df['rsid'] = df.apply(lambda row: dbsnp_single_position_query(row[chr_col_name], row[pos_col_name])[0][2],
-                              axis=1)
+        df[rsid_col_name] = df.apply(lambda row: dbsnp_single_position_query(row[chr_col_name],
+                                                                             row[pos_col_name])[0][2], axis=1)
     else:
         if coord_col_name is not None:
 
