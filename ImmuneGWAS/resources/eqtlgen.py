@@ -37,7 +37,7 @@ def single_eqtlgen_cis_query(chromosome: int, position: int, EA: str = None) -> 
         logging.exception(f"'tabix.TabixError' raised for tabix lookup for position {chromosome}:{position}-{position}"
                           f"in file {eqtlgen_cis_path}")
         df = pd.DataFrame()
-    if EA:
+    if EA and not df.empty:  # EA check
         if EA == df.iloc[0]['AssessedAllele']:
             pass
         elif EA == df.iloc[0]['OtherAllele']:  # If it matches the OtherAllele instead, we flip the Zscore
