@@ -41,6 +41,7 @@ def single_tokyo_eqtl_query(chromosome, position, EA=None) -> pd.DataFrame:
     :param EA: Effect allele. Used to flip beta if necessary. If None, no flipping is done.
     :return: DataFrame with all the matches from the eQTL catalogue for the variant at the inputted position
     """
+    logging.info(f"Querying variant at {chromosome}:{position}")
     tabix_indexed_files = get_tokyo_eqtl_file_list()
     list_of_celltype_match_dfs = []  # List of dataframes, one for each cell type in Tokyo that contains the variant
     for i, celltype_file in enumerate(tabix_indexed_files):
@@ -96,8 +97,7 @@ def tokyo_eqtl_LDblock_query(variant_object: Variant):
 
     LDblock_df = variant_object.get_LDblock()
     if LDblock_df.empty:  # If the LD block is empty, return the lead variant dataframe alone.
-        logging.warning("The Variant object has no LDblock attribute. Returning lead variant only.")
-        variant_object.results.set_tokyo_eqtl_df(lead_variant_df)
+        logging.error("The Variant object has no LDblock attribute. No LD block query was performed.")
         return
 
     variant_positions_list_of_lists = []  # [[chromosome, position, EA], ...]. We'll iterate over this list later

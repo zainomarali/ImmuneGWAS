@@ -23,7 +23,7 @@ def single_immuneGWAS_query(chromosome, position) -> pd.DataFrame:
     :param position: Position in chromosome
     :return: DataFrame with all the matches from Immune cell GWAS hits file for variant at (chromosome, position)
     """
-
+    logging.info(f"Querying variant at {chromosome}:{position}")
     try:
         immuneGWAS_tabix_file = tabix.open(immuneGWAS_path)
         # Make the tabix query. Returns iterator with all matches from tabix lookup.
