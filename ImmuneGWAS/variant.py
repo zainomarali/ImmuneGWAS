@@ -224,7 +224,12 @@ class Variant:
 
             df['EA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.EA])
             df['OA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.OA])
-            df['chrom'] = df.Coord.apply(lambda x: int(x.split(":")[0][-1]))  # TODO: there is a bug here
+
+
+            chrom = df.Coord.apply(lambda x: (x.split(":")[0])).tolist()[0]
+            chrom = chrom.split("r")[-1]
+            df['chrom'] = int(chrom)
+
             df['hg38_pos'] = df.Coord.apply(lambda x: int(x.split(":")[1]))
             df = df[['RS_Number', 'chrom', 'hg38_pos', 'EA', 'OA', 'R2', 'MAF']]
             self.LDblock = df
