@@ -48,7 +48,7 @@ if __name__ == '__main__':
     #ldtrait(variant_obj)
     #variant_obj.results.ldtrait()
     eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_obj, ['ge', 'microarray'])
-    df = variant_obj.results.eqtl_cat()
+    df = variant_obj.results.get_eqtl_cat()
     print(df)
     #print(df.drop_duplicates())
     df.to_csv("/home/antton/Desktop/eqtlcat.csv")

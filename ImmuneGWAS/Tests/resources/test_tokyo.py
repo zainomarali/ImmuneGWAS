@@ -38,7 +38,7 @@ def test_single_tokyo_eqtl_query_EA_check():
 def test_tokyo_eqtl_ldblock_query(variant_object):
     var = variant_object
     tokyo_eqtl_LDblock_query(var)
-    df = var.results.tokyo_eqtl()
+    df = var.results.get_tokyo_eqtl()
 
     assert df is not None
     assert type(df) == pd.DataFrame
@@ -52,7 +52,7 @@ def test_tokyo_eqtl_ldblock_query_missing_ldblock(variant_object):
     var = variant_object
     var.set_LDblock(False, pd.DataFrame())  # Set the LDblock to be missing
     tokyo_eqtl_LDblock_query(var)
-    df = var.results.tokyo_eqtl()
+    df = var.results.get_tokyo_eqtl()
 
     assert df is not None
     assert type(df) == pd.DataFrame

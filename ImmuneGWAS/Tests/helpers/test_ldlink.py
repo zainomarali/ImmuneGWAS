@@ -20,7 +20,7 @@ def ldtrait_df():
     # 'rs624896' has LDtrait output and is in dbSNP
     variant_obj = Variant("rs624896", 5, 114520357, "A", "G")  # Create new Variant object
     ldtrait(variant_obj)  # Update the .results object
-    return variant_obj.results.ldtrait()  # This is a pandas dataframe
+    return variant_obj.results.get_ldtrait()  # This is a pandas dataframe
 
 
 def test_ldproxy(ldproxy_df) -> None:
@@ -57,4 +57,4 @@ def test_ldtrait_missing_variant():
     """
     variant_obj = Variant("rs149143617", 1, 777870, "C", "G")  # This variant should not have any matches in LDtrait
     ldtrait(variant_obj)
-    assert variant_obj.results.ldtrait().empty
+    assert variant_obj.results.get_ldtrait().empty

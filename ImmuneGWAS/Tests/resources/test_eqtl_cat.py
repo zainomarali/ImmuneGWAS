@@ -35,9 +35,24 @@ def test_single_eqtl_catalogue_query_type_restricted():
     assert type(df) == pd.DataFrame
 
 
+def test_single_eqtl_catalogue_query_type_restricted_EA_check():
+    """Make sure that the EA check works correctly. The z value should be 'flipped' (multiplied by -1) if the
+    EA corresponds to the REF instead of the ALT alllele"""
+
+    # Case where EA and ALT are the same
+    var1 = Variant("rs1354034", 3, 56815721, 'T', 'C')
+    df1 = single_eqtl_catalogue_query_type_restricted(var1.get_chrom(), var1.get_pos(), 'ge', 'T')
+
+    # Case where EA corresponds to REF instead
+    var2 = Variant("rs1354034", 3, 56815721, 'T', 'C')
+    df2 = single_eqtl_catalogue_query_type_restricted(var2.get_chrom(), var2.get_pos(), 'ge', 'C')
+
+    assert df1.z.astype(float).equals(df2.z.astype(float) * -1)
+
+
 def test_eqtl_catalogue_LDblock_query_type_restricted_multitype():
     var = Variant.from_rsid('rs9272363')
     eqtl_catalogue_LDblock_query_type_restricted_multitype(var, ["ge"])
-    df = var.results.eqtl_cat()
+    df = var.results.get_eqtl_cat()
     assert df is not None
     assert type(df) == pd.DataFrame

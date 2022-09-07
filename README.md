@@ -1,7 +1,9 @@
 # ImmuneGWAS
-Scripts for analysis of GWAS results.
+Python package for analysis of our immune-cell GWAS results.
 
-These scripts integrate several eQTL databases to look for genetic effects of SNPs identified by GWAS.
+This package integrates several eQTL databases to look for genetic effects of SNPs identified by GWAS. I will
+allow to elucidate the "story" behind many of these hits by showing the cis and trans eQTL signals that are
+associated with the SNP's LD block.
 
 ## Getting Started
 
@@ -37,7 +39,7 @@ cis-eQTLs from eQTLGen for the variant, you can run:
 This will update the contents of the `.results` attribute of the object with the results from the query. You can get
 those results by running:
 
-    Variant.results.eqtlgen_cis()
+    Variant.results.get_eqtlgen_cis()
 
 ## Resources
 
@@ -47,3 +49,6 @@ The following databases are available, listed here under the names used in the s
 * **eQTL cat**: a database of eQTLs from the [eQTL Catalogue](https://www.ebi.ac.uk/eqtl/) project, by EMBL-EBI.
 * **eQTLGen**: a database of eQTLs by the [eQTLGen](https://www.eqtlgen.org/) Consortium. Both cis-eQTL and trans-eQTL 
 datasets are available.
+
+Additionally, our preliminary GWAS results, and the output of the LDlink tool LDtrait are also available for each
+variant. 

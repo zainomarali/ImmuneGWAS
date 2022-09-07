@@ -37,35 +37,35 @@ class Results:
     def set_ldtrait_df(self, df):
         self.ldtrait_df = df
 
-    def eqtl_cat(self):
+    def get_eqtl_cat(self):
         if self.eqtl_cat_df is None:
             logging.info('No eqtl_cat dataframe found.')
             return None
         else:
             return self.eqtl_cat_df
 
-    def eqtlgen_cis(self):
+    def get_eqtlgen_cis(self):
         if self.eqtlgen_cis_df is None:
             logging.info('No eqtlgen_cis dataframe found.')
             return None
         else:
             return self.eqtlgen_cis_df
 
-    def eqtlgen_trans(self):
+    def get_eqtlgen_trans(self):
         if self.eqtlgen_trans_df is None:
             logging.info('No eqtlgen_trans dataframe found.')
             return None
         else:
             return self.eqtlgen_trans_df
 
-    def tokyo_eqtl(self):
+    def get_tokyo_eqtl(self):
         if self.tokyo_eqtl_df is None:
             logging.info('No tokyo dataframe found.')
             return None
         else:
             return self.tokyo_eqtl_df
 
-    def ldtrait(self):
+    def get_ldtrait(self):
         if self.ldtrait_df is None:
             logging.info('No ldtrait dataframe found.')
             return None
@@ -124,6 +124,12 @@ class Variant:
         EA = sp_output_list[5]
 
         return cls(rsid, chrom, pos, EA, OA)
+
+    @classmethod
+    def from_dbsnp(cls, rsid: str):
+        """Alternate constructor that looks up dbsnp instead of the sumstats file.
+        WARNING: This is not implemented yet. TODO: Implement this."""
+        pass
 
     def __cross_reference_dbsnp(self) -> None:
         """
@@ -219,9 +225,11 @@ class Variant:
             df['EA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.EA])
             df['OA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.OA])
 
+
             chrom = df.Coord.apply(lambda x: (x.split(":")[0])).tolist()[0]
             chrom = chrom.split("r")[-1]
             df['chrom'] = int(chrom)
+
             df['hg38_pos'] = df.Coord.apply(lambda x: int(x.split(":")[1]))
             df = df[['RS_Number', 'chrom', 'hg38_pos', 'EA', 'OA', 'R2', 'MAF']]
             self.LDblock = df

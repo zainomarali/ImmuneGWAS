@@ -1,4 +1,6 @@
 import json
+import logging
+
 from ImmuneGWAS.helpers.getpaths import get_paths
 import ImmuneGWAS.config as config
 
@@ -20,4 +22,5 @@ def get_gene_symbol(gene_id: str) -> str:
     if gene_id in alias_dict:
         return alias_dict[gene_id]
     else:
-        raise ValueError("Gene id not found in alias table.")
+        logging.warning(f"Gene ID {gene_id} not found in alias table.")
+        return gene_id
