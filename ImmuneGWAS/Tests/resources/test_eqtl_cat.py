@@ -37,7 +37,8 @@ def test_single_eqtl_catalogue_query_type_restricted():
 
 def test_single_eqtl_catalogue_query_type_restricted_EA_check():
     """Make sure that the EA check works correctly. The z value should be 'flipped' (multiplied by -1) if the
-    EA corresponds to the REF instead of the ALT alllele"""
+    EA corresponds to the REF instead of the ALT allele
+    TODO: fix so that df1 and df2 are not empty"""
 
     # Case where EA and ALT are the same
     var1 = Variant("rs1354034", 3, 56815721, 'T', 'C')
@@ -47,6 +48,8 @@ def test_single_eqtl_catalogue_query_type_restricted_EA_check():
     var2 = Variant("rs1354034", 3, 56815721, 'T', 'C')
     df2 = single_eqtl_catalogue_query_type_restricted(var2.get_chrom(), var2.get_pos(), 'ge', 'C')
 
+    assert not df1.empty
+    assert not df2.empty
     assert df1.z.astype(float).equals(df2.z.astype(float) * -1)
 
 

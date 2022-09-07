@@ -39,14 +39,13 @@ def dbsnp_single_position_query(SNP_chr: int, SNP_pos: int):
         return None
     else:
         if len(match_list) > 1:
-            logging.warning(f"More than one match for {SNP_chr}:{SNP_pos}-{SNP_pos} in dbsnp, probably due to "
-                            f"overlapping variants. Attempting to guess correct option by matching positions exactly")
             for match in match_list:  # Loop through matches and take the one with position identical to SNP_pos
                 match_position = int(match[1])
                 if match_position == SNP_pos:  # Ensure the variant is in the exact same position that was queried
                     match_list = [match]  # Make it a "list of lists" even if it's only one list
                     break
-            logging.warning(f"For query of {SNP_chr}:{SNP_pos}, returning dbsnp match: {match_list}")
+            logging.warning(f"More than one match for {SNP_chr}:{SNP_pos} in dbsnp. Attempting to guess correct option"
+                            f"by matching positions exactly. Selected match: {match_list[0][:4]}...")
         return match_list  # This will be a list with a variable number of elements.
 
 

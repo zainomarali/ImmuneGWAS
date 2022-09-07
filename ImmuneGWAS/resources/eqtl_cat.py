@@ -50,8 +50,8 @@ def single_eqtl_catalogue_query_type_restricted(chromosome: int, position: int, 
     This function is called by the function  :py:func:`eqtl_catalogue_LDblock_query_type_restricted` once for every
     variant in the LD block of a Variant object.
     If the EA parameter is specified, the function will check that the given effect allele (EA) is the same as the
-    eQTL catalogue ALT allele, and it will raise an exception if not. By design, In the eQTL catalogue data ALT should
-    always be the effect allele. (https://www.ebi.ac.uk/eqtl/Data_access/), but we can still run into issues with
+    eQTL catalogue ALT allele, and it will flip the value of 'z' if not. By design, In the eQTL catalogue data ALT
+    should always be the effect allele (https://www.ebi.ac.uk/eqtl/Data_access/), but we can still run into issues with
     multi allelic variants, for example.
 
     :param chromosome: chromosome number
