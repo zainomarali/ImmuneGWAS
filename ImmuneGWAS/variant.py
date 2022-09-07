@@ -15,6 +15,7 @@ class Results:
 
     eqtl_cat_df = None
     eqtlgen_cis_df = None
+    eqtlgen_trans_df = None
     tokyo_eqtl_df = None
     ldtrait_df = None
 
@@ -26,6 +27,9 @@ class Results:
 
     def set_eqtlgen_cis_df(self, df):
         self.eqtlgen_cis_df = df
+
+    def set_eqtlgen_trans_df(self, df):
+        self.eqtlgen_trans_df = df
 
     def set_tokyo_eqtl_df(self, df):
         self.tokyo_eqtl_df = df
@@ -46,6 +50,13 @@ class Results:
             return None
         else:
             return self.eqtlgen_cis_df
+        
+    def eqtlgen_trans(self):
+        if self.eqtlgen_trans_df is None:
+            logging.info('No eqtlgen_trans dataframe found.')
+            return None
+        else:
+            return self.eqtlgen_trans_df
 
     def tokyo_eqtl(self):
         if self.tokyo_eqtl_df is None:
