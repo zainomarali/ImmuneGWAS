@@ -3,7 +3,8 @@ import warnings
 import requests
 from requests.structures import CaseInsensitiveDict
 import logging
-import ImmuneGWAS.variant as Variant
+
+from ImmuneGWAS.helpers import dbsnp
 
 
 """
@@ -118,6 +119,13 @@ def ldproxy(rsid, pop='CEU+FIN+GBR+TSI+IBS', threshold=0.8):
         df = df[df.R2 > threshold]
     else:
         logging.error("df lacks 'R2' column. It might be empty.")
+
+    if not df.empty:  # Replace rsids with updated versions from dbSNP
+        logging.info("Replacing LDproxy rsids with updated versions from dbSNP")
+
+        df = dbsnp.replace_rsid_column_with_dbsnp(df, '', '', rsid_col_name='RS_Number',
+                                                  single_position_column=True,
+                                                  coord_col_name='Coord')
 
     logging.info("LDproxy request complete.")
 

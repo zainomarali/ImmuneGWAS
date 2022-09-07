@@ -46,7 +46,7 @@ if __name__ == '__main__':
 
     #variant_obj = Variant.from_rsid("rs10982456")
     #ldtrait(variant_obj)
-    #variant_obj.results.ldtrait()
+    print(variant_obj.LDblock.head())
     eqtl_catalogue_LDblock_query_type_restricted_multitype(variant_obj, ['ge', 'microarray'])
     df = variant_obj.results.get_eqtl_cat()
     print(df)

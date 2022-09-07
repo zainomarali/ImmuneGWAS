@@ -225,7 +225,6 @@ class Variant:
             df['EA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.EA])
             df['OA'] = df.Correlated_Alleles.apply(lambda x: self.__map_alleles(x, self.EA, self.OA)[self.OA])
 
-
             chrom = df.Coord.apply(lambda x: (x.split(":")[0])).tolist()[0]
             chrom = chrom.split("r")[-1]
             df['chrom'] = int(chrom)
