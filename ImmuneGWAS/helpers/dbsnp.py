@@ -41,7 +41,8 @@ def dbsnp_single_position_query(SNP_chr: int, SNP_pos: int):
         return match_list  # This will be a list with a variable number of elements.
 
 
-def replace_rsid_column_with_dbsnp(df: pd.DataFrame, rsid_col_name: str, chr_col_name: str, pos_col_name: str) -> pd.DataFrame:
+def replace_rsid_column_with_dbsnp(df: pd.DataFrame, rsid_col_name: str, chr_col_name: str, pos_col_name: str) \
+        -> pd.DataFrame:
     """
     For a df, replace its column with rsIDs with a new column obtained by getting the rsid listed dbsnp for that
     position.
@@ -52,4 +53,6 @@ def replace_rsid_column_with_dbsnp(df: pd.DataFrame, rsid_col_name: str, chr_col
     :param pos_col_name: name of the column with positions
     :return: dataframe with the same columns as the input, but with a new column with rsIDs obtained from dbsnp
     """
-    pass
+    df['rsid'] = df.apply(lambda row: dbsnp_single_position_query(row[chr_col_name], row[pos_col_name])[0][2], axis=1)
+
+    return df
